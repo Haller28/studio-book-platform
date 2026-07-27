@@ -1,0 +1,40 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>Terms of Service — Studio Book</title>
+<link href="https://fonts.googleapis.com/css2?family=Playfair+Display:wght@500;600;700&family=Inter:wght@400;500;600;700&display=swap" rel="stylesheet">
+<link rel="stylesheet" href="style.css">
+<style>.legal{max-width:760px;margin:60px auto;padding:0 24px}.legal h2{margin-bottom:6px}.legal p{color:var(--ink-soft)}.legal h3{margin:32px 0 10px;font-size:1.1rem}</style>
+</head>
+<body>
+<header class="site"><nav class="nav"><a href="index.html" class="brand">Studio <span>Book</span></a></nav></header>
+<div class="legal">
+  <h2>Terms of Service</h2>
+  <p style="margin-bottom:28px">Draft placeholder — last updated <span id="d"></span>. Studio Book is a new platform; this page will be replaced with a final, attorney-reviewed version before public launch and paid billing go live.</p>
+
+  <h3>1. The service</h3>
+  <p>Studio Book provides independent salons with a hosted booking website, staff portal, and related tools ("the Service"). Each subscriber's site and data are provisioned and hosted independently.</p>
+
+  <h3>2. Accounts and trials</h3>
+  <p>New salons may use the Service on a trial basis before any payment is required. We will always tell you clearly before any charge is made to a payment method on file.</p>
+
+  <h3>3. Your data</h3>
+  <p>You own the client, booking, and business data you enter into your Studio Book site. We do not sell subscriber data. Data is stored in a per-salon store isolated from other subscribers.</p>
+
+  <h3>4. Payments</h3>
+  <p>Subscription fees and any card-processing rates are disclosed at signup and in your account settings. Cancel anytime; no long-term contract is required.</p>
+
+  <h3>5. Acceptable use</h3>
+  <p>Don't use the Service to send unlawful communications, misrepresent your business, or interfere with the platform's normal operation.</p>
+
+  <h3>6. Changes</h3>
+  <p>We may update these terms as the product evolves. Material changes will be communicated to active subscribers by email.</p>
+
+  <p style="margin-top:36px;font-size:.85rem">Questions about these terms? Contact us at the email address provided during signup.</p>
+</div>
+<footer><p>© <span id="year"></span> Studio Book.</p></footer>
+<script>document.getElementById('year').textContent=new Date().getFullYear();document.getElementById('d').textContent=new Date().toLocaleDateString(undefined,{year:'numeric',month:'long',day:'numeric'});</script>
+</body>
+</html>

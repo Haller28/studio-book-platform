@@ -1,0 +1,144 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>Admin — Studio Book</title>
+<meta name="robots" content="noindex, nofollow">
+<link href="https://fonts.googleapis.com/css2?family=Playfair+Display:wght@500;600;700&family=Inter:wght@400;500;600;700&display=swap" rel="stylesheet">
+<link rel="stylesheet" href="style.css">
+<style>
+  .admin-wrap{max-width:900px;margin:60px auto;padding:0 24px}
+  table.signups{width:100%;border-collapse:collapse;background:#fff;border:1px solid var(--line);border-radius:10px;overflow:hidden;font-size:.88rem}
+  table.signups th, table.signups td{padding:12px 14px;border-bottom:1px solid var(--line);text-align:left;vertical-align:top}
+  table.signups th{background:var(--cream2);font-family:var(--serif)}
+  .status-pill{display:inline-block;padding:3px 10px;border-radius:20px;font-size:.72rem;text-transform:uppercase;letter-spacing:.04em;font-weight:700}
+  .status-pending{background:#f2e2c8;color:#8a6520}
+  .status-provisioned{background:#dcefe0;color:#2c6b3f}
+  .mini-btn{padding:6px 12px;font-size:.78rem;border-radius:5px;border:1px solid var(--ink);background:#fff;cursor:pointer}
+</style>
+</head>
+<body>
+
+<header class="site">
+  <nav class="nav">
+    <a href="index.html" class="brand">Studio <span>Book</span></a>
+  </nav>
+</header>
+
+<div class="admin-wrap">
+  <h2 style="margin-bottom:8px">Signup requests</h2>
+  <p style="color:var(--ink-soft);margin-bottom:24px">Internal view only. Enter your admin key to load the list.</p>
+
+  <div id="gate" class="signup-card" style="max-width:420px;margin-bottom:32px">
+    <div class="field">
+      <label for="adminKey">Admin key</label>
+      <input type="password" id="adminKey" placeholder="PROVISION_ADMIN_SECRET">
+    </div>
+    <button class="btn btn-primary" id="loadBtn" style="width:100%">Load signups</button>
+  </div>
+
+  <div id="results" style="display:none">
+    <div id="tableWrap"></div>
+  </div>
+  <p id="statusMsg" style="color:var(--ink-soft);font-size:.9rem"></p>
+</div>
+
+<footer><p>© <span id="year"></span> Studio Book.</p></footer>
+
+<script>
+document.getElementById('year').textContent = new Date().getFullYear();
+
+let adminKey = '';
+
+function fmtDate(ts){ return new Date(ts).toLocaleString(); }
+
+async function loadSignups(){
+  const statusMsg = document.getElementById('statusMsg');
+  const resultsEl = document.getElementById('results');
+  adminKey = document.getElementById('adminKey').value.trim();
+  if (!adminKey) { statusMsg.textContent = 'Enter your admin key first.'; return; }
+
+  statusMsg.textContent = 'Loading...';
+  try {
+    const res = await fetch('/.netlify/functions/list-signups', {
+      headers: { 'x-admin-secret': adminKey }
+    });
+    const data = await res.json();
+
+    if (res.status === 403) {
+      statusMsg.textContent = 'Wrong admin key.';
+      return;
+    }
+    if (data.error) {
+      statusMsg.textContent = data.error;
+    } else {
+      statusMsg.textContent = '';
+    }
+
+    const signups = data.signups || [];
+    resultsEl.style.display = 'block';
+    if (!signups.length) {
+      document.getElementById('tableWrap').innerHTML = '<p style="color:var(--ink-soft)">No signup requests yet.</p>';
+      return;
+    }
+
+    const rows = signups.map(s => `
+      <tr>
+        <td>${s.salonName}<br><span style="color:var(--ink-soft);font-size:.8rem">${s.plan} · ${s.billing}</span></td>
+        <td>${s.ownerName}<br><span style="color:var(--ink-soft);font-size:.8rem">${s.email}</span>${s.phone ? '<br><span style="color:var(--ink-soft);font-size:.8rem">' + s.phone + '</span>' : ''}</td>
+        <td>${s.oldSiteUrl ? `<a href="${s.oldSiteUrl}" target="_blank" rel="noopener">${s.oldSiteUrl}</a>` : '—'}</td>
+        <td><span class="status-pill status-${s.status === 'provisioned' ? 'provisioned' : 'pending'}">${s.status}</span></td>
+        <td>${fmtDate(s.createdAt)}</td>
+        <td>${s.status === 'provisioned' ? '' : `<button class="mini-btn" data-id="${s.id}" data-salon="${encodeURIComponent(s.salonName)}" data-owner="${encodeURIComponent(s.ownerName)}" data-email="${s.email}" data-phone="${s.phone || ''}" data-plan="${s.plan}">Provision free</button>`}</td>
+      </tr>
+    `).join('');
+
+    document.getElementById('tableWrap').innerHTML = `
+      <table class="signups">
+        <tr><th>Salon</th><th>Contact</th><th>Old site</th><th>Status</th><th>Requested</th><th></th></tr>
+        ${rows}
+      </table>
+    `;
+
+    document.querySelectorAll('.mini-btn').forEach(btn => {
+      btn.addEventListener('click', async () => {
+        btn.disabled = true;
+        btn.textContent = 'Provisioning...';
+        try {
+          const res = await fetch('/.netlify/functions/provision-site', {
+            method: 'POST',
+            headers: { 'Content-Type': 'application/json', 'x-admin-secret': adminKey },
+            body: JSON.stringify({
+              salonName: decodeURIComponent(btn.dataset.salon),
+              ownerName: decodeURIComponent(btn.dataset.owner),
+              email: btn.dataset.email,
+              phone: btn.dataset.phone,
+              plan: btn.dataset.plan
+            })
+          });
+          const data = await res.json();
+          if (data.ok) {
+            btn.textContent = 'Done — site live';
+          } else if (data.reason === 'not_configured') {
+            btn.textContent = 'Provisioning not set up yet';
+          } else {
+            btn.textContent = 'Failed — see logs';
+          }
+        } catch (e) {
+          btn.textContent = 'Failed — try again';
+          btn.disabled = false;
+        }
+      });
+    });
+  } catch (e) {
+    statusMsg.textContent = 'Something went wrong loading signups.';
+  }
+}
+
+document.getElementById('loadBtn').addEventListener('click', loadSignups);
+document.getElementById('adminKey').addEventListener('keydown', (e) => { if (e.key === 'Enter') loadSignups(); });
+</script>
+
+</body>
+</html>
