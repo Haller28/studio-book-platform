@@ -1,0 +1,76 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>Log In — Studio Book</title>
+<link href="https://fonts.googleapis.com/css2?family=Playfair+Display:wght@500;600;700&family=Inter:wght@400;500;600;700&display=swap" rel="stylesheet">
+<link rel="stylesheet" href="style.css">
+</head>
+<body>
+
+<header class="site">
+  <nav class="nav">
+    <a href="index.html" class="brand">Studio <span>Book</span></a>
+    <div class="nav-cta">
+      <a href="signup.html" class="btn btn-primary" style="padding:11px 20px">Start Free</a>
+    </div>
+  </nav>
+</header>
+
+<div class="signup-wrap">
+  <h2 style="text-align:center;margin-bottom:8px">Find your salon</h2>
+  <p style="text-align:center;color:var(--ink-soft);margin-bottom:36px">Every Studio Book salon has its own site. Enter your email and we'll send you straight there.</p>
+
+  <div class="signup-card">
+    <form id="findForm">
+      <div class="field">
+        <label for="lookupEmail">Email</label>
+        <input type="email" id="lookupEmail" placeholder="you@yoursalon.com" required>
+      </div>
+      <button type="submit" class="btn btn-primary" style="width:100%" id="findBtn">Take me to my site</button>
+    </form>
+    <div id="findMsg" style="display:none;margin-top:16px;padding:14px;border-radius:8px;background:var(--cream2);font-size:.88rem;text-align:center"></div>
+  </div>
+</div>
+
+<footer>
+  <p>© <span id="year"></span> Studio Book.</p>
+</footer>
+
+<script>
+document.getElementById('year').textContent = new Date().getFullYear();
+
+document.getElementById('findForm').addEventListener('submit', async (e)=>{
+  e.preventDefault();
+  const btn = document.getElementById('findBtn');
+  const msg = document.getElementById('findMsg');
+  btn.disabled = true;
+  btn.textContent = 'Looking...';
+  msg.style.display = 'none';
+
+  try {
+    const res = await fetch('/.netlify/functions/find-site', {
+      method: 'POST',
+      headers: { 'Content-Type': 'application/json' },
+      body: JSON.stringify({ email: document.getElementById('lookupEmail').value.trim() })
+    });
+    const data = await res.json();
+    if (res.ok && data.siteUrl) {
+      window.location.href = `${data.siteUrl}/portal.html`;
+      return;
+    }
+    msg.style.display = 'block';
+    msg.textContent = data.error || "We couldn't find a site for that email.";
+  } catch (err) {
+    msg.style.display = 'block';
+    msg.textContent = 'Something went wrong — please try again.';
+  } finally {
+    btn.disabled = false;
+    btn.textContent = 'Take me to my site';
+  }
+});
+</script>
+
+</body>
+</html>

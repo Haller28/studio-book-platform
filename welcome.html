@@ -1,0 +1,31 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>You're in — Studio Book</title>
+<link href="https://fonts.googleapis.com/css2?family=Playfair+Display:wght@500;600;700&family=Inter:wght@400;500;600;700&display=swap" rel="stylesheet">
+<link rel="stylesheet" href="style.css">
+</head>
+<body>
+
+<header class="site">
+  <nav class="nav">
+    <a href="index.html" class="brand">Studio <span>Book</span></a>
+  </nav>
+</header>
+
+<div class="signup-wrap">
+  <div class="signup-card" style="text-align:center">
+    <h2 style="margin-bottom:14px">You're all set 🎉</h2>
+    <p style="color:var(--ink-soft);margin-bottom:8px">We're building your Studio Book site right now — it usually takes just a couple of minutes.</p>
+    <p style="color:var(--ink-soft)">Check your email for a link to your new site and a code to claim your owner account.</p>
+  </div>
+</div>
+
+<footer>
+  <p>© <span id="year"></span> Studio Book.</p>
+</footer>
+<script>document.getElementById('year').textContent = new Date().getFullYear();</script>
+</body>
+</html>
