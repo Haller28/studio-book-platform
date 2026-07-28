@@ -29,6 +29,15 @@ const PLANS = {
     annualPrice: 33,
     stripePriceIdMonthly: process.env.STRIPE_PRICE_PRO_MONTHLY || null,
     stripePriceIdAnnual: process.env.STRIPE_PRICE_PRO_ANNUAL || null,
+    maxTeam: 10
+  },
+  elite: {
+    key: 'elite',
+    name: 'Studio Elite',
+    monthlyPrice: 59,
+    annualPrice: 49,
+    stripePriceIdMonthly: process.env.STRIPE_PRICE_ELITE_MONTHLY || null,
+    stripePriceIdAnnual: process.env.STRIPE_PRICE_ELITE_ANNUAL || null,
     maxTeam: null // unlimited
   }
 };
