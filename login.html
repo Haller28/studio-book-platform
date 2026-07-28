@@ -59,7 +59,10 @@ document.getElementById('findForm').addEventListener('submit', async (e)=>{
     });
     const data = await res.json();
     if (res.ok && data.siteUrl) {
-      window.location.href = `${data.siteUrl}/portal.html`;
+      // Instant sites (salonvine.com/s/<slug>) are single-page — go straight
+      // there. Standalone client sites keep their /portal.html staff portal.
+      const dest = data.siteUrl.includes('/s/') ? data.siteUrl : `${data.siteUrl}/portal.html`;
+      window.location.href = dest;
       return;
     }
     msg.style.display = 'block';
