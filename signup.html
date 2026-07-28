@@ -23,7 +23,7 @@
 
 <div class="signup-wrap">
   <h2 style="text-align:center;margin-bottom:8px">Start your salon</h2>
-  <p style="text-align:center;color:var(--ink-soft);margin-bottom:36px">Free for 30 days. No credit card charged until your trial ends.</p>
+  <p style="text-align:center;color:var(--ink-soft);margin-bottom:36px">Free for 30 days. We'll ask for a card so your site keeps running when the trial ends — nothing is charged today.</p>
 
   <div class="signup-card">
     <div class="plan-pick" id="planPick">
@@ -62,8 +62,18 @@
         <label for="oldSiteUrl">Existing website (optional)</label>
         <input type="url" id="oldSiteUrl" placeholder="https://your-old-site.com">
       </div>
-      <button type="submit" class="btn btn-primary" style="width:100%;margin-top:8px" id="submitBtn">Continue to checkout</button>
-      <p style="font-size:.78rem;color:var(--ink-soft);text-align:center;margin-top:16px">By continuing you agree to Salon Vine's <a href="terms.html" style="text-decoration:underline">Terms of Service</a> and <a href="privacy.html" style="text-decoration:underline">Privacy Policy</a>. Cancel anytime, no long-term contract.</p>
+      <div id="billingSummary" style="margin-top:22px;padding:16px 18px;border:1px solid var(--line);border-radius:8px;background:var(--cream2)">
+        <div style="font-size:.82rem;font-weight:600;letter-spacing:.08em;text-transform:uppercase;color:var(--accent);margin-bottom:8px">How billing works</div>
+        <ul style="margin:0;padding-left:18px;font-size:.86rem;color:var(--ink-soft);line-height:1.7">
+          <li><strong id="bsToday" style="color:var(--ink)">$0 today.</strong> Your card is saved but not charged.</li>
+          <li>Your free trial runs <strong id="bsTrial" style="color:var(--ink)">30 days</strong>, ending <strong id="bsDate" style="color:var(--ink)"></strong>.</li>
+          <li>After that, <strong id="bsRenew" style="color:var(--ink)"></strong> — and the same amount every month after, automatically, until you cancel.</li>
+          <li>Cancel anytime from your account settings. No fees, no contract.</li>
+        </ul>
+      </div>
+
+      <button type="submit" class="btn btn-primary" style="width:100%;margin-top:18px" id="submitBtn">Continue to secure checkout</button>
+      <p style="font-size:.78rem;color:var(--ink-soft);text-align:center;margin-top:16px">By continuing you agree to Salon Vine's <a href="terms.html" style="text-decoration:underline">Terms of Service</a> and <a href="privacy.html" style="text-decoration:underline">Privacy Policy</a>, and you authorise Salon Vine to charge your card the recurring monthly amount above once your free trial ends, until you cancel.</p>
     </form>
     <div id="formMsg" style="display:none;margin-top:16px;padding:14px;border-radius:8px;background:var(--cream2);font-size:.88rem;text-align:center"></div>
   </div>
@@ -80,10 +90,31 @@ let selectedPlan = 'pro';
 const params = new URLSearchParams(window.location.search);
 if (params.get('plan') === 'studio' || params.get('plan') === 'elite') selectedPlan = params.get('plan');
 
+// Keep these in step with PLANS in netlify/functions/_lib.js
+const PLAN_LABELS = {
+  studio: { name: 'Studio',       price: 19 },
+  pro:    { name: 'Studio Pro',   price: 39 },
+  elite:  { name: 'Studio Elite', price: 59 }
+};
+const TRIAL_DAYS = 30;
+
 function syncPlanButtons(){
   document.querySelectorAll('.pp-btn').forEach(btn=>{
     btn.classList.toggle('active', btn.dataset.plan === selectedPlan);
   });
+  syncBillingSummary();
+}
+
+// Spell out exactly what gets charged and when, for the plan they've picked.
+function syncBillingSummary(){
+  const p = PLAN_LABELS[selectedPlan] || PLAN_LABELS.pro;
+  const end = new Date();
+  end.setDate(end.getDate() + TRIAL_DAYS);
+  const pretty = end.toLocaleDateString(undefined, { month:'long', day:'numeric', year:'numeric' });
+
+  document.getElementById('bsTrial').textContent = TRIAL_DAYS + ' days';
+  document.getElementById('bsDate').textContent  = pretty;
+  document.getElementById('bsRenew').textContent = p.name + ' renews at $' + p.price + '/month';
 }
 syncPlanButtons();
 
