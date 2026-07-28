@@ -19,7 +19,8 @@ img{max-width:100%;display:block}
 
 header.site{position:sticky;top:0;z-index:50;background:rgba(250,246,240,.92);backdrop-filter:blur(6px);border-bottom:1px solid var(--line)}
 .nav{display:flex;align-items:center;justify-content:space-between;padding:18px 24px;max-width:1120px;margin:0 auto}
-.brand{font-family:var(--serif);font-size:1.35rem;letter-spacing:.02em}
+.brand{font-family:var(--serif);font-size:1.35rem;letter-spacing:.02em;display:flex;align-items:center;gap:10px}
+.brand img.brand-logo{height:46px;width:auto;display:block}
 .brand span{color:var(--accent)}
 .nav-links{display:flex;gap:30px;list-style:none;margin:0;padding:0;font-size:.85rem;font-weight:500}
 .nav-cta{display:flex;gap:14px;align-items:center}
