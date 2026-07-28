@@ -293,7 +293,7 @@ function doPost(e) {
   var token = String(body.token || '');
 
   /* Public (light-token) writes */
-  if (type === 'signup' || type === 'signupSite' || type === 'sitePhoto' || type === 'siteLead') {
+  if (type === 'signup' || type === 'signupSite' || type === 'sitePhoto' || type === 'siteLead' || type === 'findSite') {
     if (!isPublicWriteToken_(token)) {
       return jsonOut_({ error: 'Unauthorized' });
     }
@@ -302,6 +302,7 @@ function doPost(e) {
       if (type === 'signupSite') { return handleSignupSite_(body); }
       if (type === 'sitePhoto') { return handleSitePhoto_(body); }
       if (type === 'siteLead') { return handleSiteLead_(body); }
+      if (type === 'findSite') { return handleFindSite_(body); }
     } catch (err2) {
       /* Return, don't throw — the client surfaces {error} and can
          fall back to a plain signup so the lead is never lost. */
@@ -317,6 +318,40 @@ function doPost(e) {
   if (type === 'salon') { return handleSalonUpsert_(body); }
 
   return jsonOut_({ error: 'Unknown type: ' + type });
+}
+
+/* ------------------------------------------------------------
+   {type:'findSite', email} — light-token lookup used by the
+   marketing site's "Find your salon" (login) page. Returns the
+   newest LIVE instant site whose signup email matches. Only
+   reveals slug/url/name — nothing else.
+   ------------------------------------------------------------ */
+function handleFindSite_(body) {
+  var email = String(body.email || '').trim().toLowerCase();
+  if (!email) { return jsonOut_({ ok: true, found: false }); }
+
+  var salons = readTab_(TABS.SALONS);
+  var hit = null;
+  for (var i = 0; i < salons.length; i++) {
+    var sal = salons[i];
+    var status = String(sal.status || '').toLowerCase();
+    if (status !== 'live-free' && status !== 'live') { continue; }
+    var cfg = {};
+    try { cfg = JSON.parse(String(sal.config || '{}')); } catch (e) { cfg = {}; }
+    if (String(cfg.email || '').trim().toLowerCase() === email) {
+      hit = sal; /* keep last (newest) match */
+    }
+  }
+
+  if (!hit) { return jsonOut_({ ok: true, found: false }); }
+  var slug = String(hit.slug || hit.salonId || '');
+  return jsonOut_({
+    ok: true,
+    found: true,
+    slug: slug,
+    url: String(hit.url || (PUBLIC_SITE_BASE + slug)),
+    salonName: String(hit.name || '')
+  });
 }
 
 /* ------------------------------------------------------------
