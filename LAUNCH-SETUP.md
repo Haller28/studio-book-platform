@@ -12,7 +12,7 @@ for them to take effect.
 
 ## Works right now, with zero setup
 
-- Marketing site, pricing, comparison vs GlossGenius, "how it works"
+- Marketing site, pricing, "why Studio Book," "how it works"
 - Signup form (signup.html) — saves every request and shows a friendly
   "we'll follow up" message since billing isn't live yet
 - /admin.html — internal view of signup requests, with a one-click
