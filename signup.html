@@ -35,6 +35,10 @@
         <div class="pp-name">Studio Pro</div>
         <div class="pp-price">$39/mo</div>
       </button>
+      <button type="button" data-plan="elite" class="pp-btn">
+        <div class="pp-name">Studio Elite</div>
+        <div class="pp-price">$59/mo</div>
+      </button>
     </div>
 
     <form id="signupForm">
@@ -74,7 +78,7 @@ document.getElementById('year').textContent = new Date().getFullYear();
 
 let selectedPlan = 'pro';
 const params = new URLSearchParams(window.location.search);
-if (params.get('plan') === 'studio') selectedPlan = 'studio';
+if (params.get('plan') === 'studio' || params.get('plan') === 'elite') selectedPlan = params.get('plan');
 
 function syncPlanButtons(){
   document.querySelectorAll('.pp-btn').forEach(btn=>{

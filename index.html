@@ -106,7 +106,7 @@
         <tr><th>&nbsp;</th><th class="studio-col">Studio Book</th><th>GlossGenius</th></tr>
         <tr><td>Starting price</td><td class="studio-col yes">$19/mo</td><td>$24–28/mo</td></tr>
         <tr><td>Personalized app icon</td><td class="studio-col yes">✓ Included</td><td class="no">Not available</td></tr>
-        <tr><td>Number of plans to choose from</td><td class="studio-col yes">2</td><td>3 (plus add-ons)</td></tr>
+        <tr><td>Plan structure</td><td class="studio-col yes">3 plans, no forced add-ons</td><td>3 plans + paid add-ons</td></tr>
         <tr><td>Setup fees</td><td class="studio-col yes">$0</td><td>$0</td></tr>
         <tr><td>Contract required</td><td class="studio-col yes">No</td><td>No</td></tr>
         <tr><td>Import from your old site</td><td class="studio-col">Automatic (beta)</td><td>Manual, white-glove only</td></tr>
@@ -121,7 +121,7 @@
 <section class="section" id="pricing">
   <div class="container">
     <span class="section-label">Simple pricing</span>
-    <h2>Two plans. No surprises.</h2>
+    <h2>Three plans. No surprises.</h2>
     <p class="section-sub">Every plan includes the client site, staff portal, payments, and your custom app icon. Pay monthly or save with annual billing.</p>
 
     <div class="pricing-toggle">
@@ -151,13 +151,27 @@
         <div class="price-note" id="noteStudioPro">Billed monthly</div>
         <ul>
           <li><svg fill="none" stroke="currentColor" stroke-width="2" viewBox="0 0 24 24"><polyline points="20 6 9 17 4 12"/></svg>Everything in Studio</li>
-          <li><svg fill="none" stroke="currentColor" stroke-width="2" viewBox="0 0 24 24"><polyline points="20 6 9 17 4 12"/></svg>Unlimited team members</li>
+          <li><svg fill="none" stroke="currentColor" stroke-width="2" viewBox="0 0 24 24"><polyline points="20 6 9 17 4 12"/></svg>3–10 team members</li>
           <li><svg fill="none" stroke="currentColor" stroke-width="2" viewBox="0 0 24 24"><polyline points="20 6 9 17 4 12"/></svg>Multiple locations</li>
           <li><svg fill="none" stroke="currentColor" stroke-width="2" viewBox="0 0 24 24"><polyline points="20 6 9 17 4 12"/></svg>Reports &amp; payroll exports</li>
           <li><svg fill="none" stroke="currentColor" stroke-width="2" viewBox="0 0 24 24"><polyline points="20 6 9 17 4 12"/></svg>Priority support</li>
           <li><svg fill="none" stroke="currentColor" stroke-width="2" viewBox="0 0 24 24"><polyline points="20 6 9 17 4 12"/></svg>Site import assistant (beta)</li>
         </ul>
         <a href="signup.html?plan=pro" class="btn btn-accent">Start free for 30 days</a>
+      </div>
+      <div class="plan reveal">
+        <h3>Studio Elite</h3>
+        <div class="price" id="priceStudioElite">$59<span>/mo</span></div>
+        <div class="price-note" id="noteStudioElite">Billed monthly</div>
+        <ul>
+          <li><svg fill="none" stroke="currentColor" stroke-width="2" viewBox="0 0 24 24"><polyline points="20 6 9 17 4 12"/></svg>Everything in Studio Pro</li>
+          <li><svg fill="none" stroke="currentColor" stroke-width="2" viewBox="0 0 24 24"><polyline points="20 6 9 17 4 12"/></svg>Unlimited team members</li>
+          <li><svg fill="none" stroke="currentColor" stroke-width="2" viewBox="0 0 24 24"><polyline points="20 6 9 17 4 12"/></svg>Client marketing campaigns</li>
+          <li><svg fill="none" stroke="currentColor" stroke-width="2" viewBox="0 0 24 24"><polyline points="20 6 9 17 4 12"/></svg>Custom domain set up for you</li>
+          <li><svg fill="none" stroke="currentColor" stroke-width="2" viewBox="0 0 24 24"><polyline points="20 6 9 17 4 12"/></svg>Dedicated onboarding call</li>
+          <li><svg fill="none" stroke="currentColor" stroke-width="2" viewBox="0 0 24 24"><polyline points="20 6 9 17 4 12"/></svg>Early access to new features</li>
+        </ul>
+        <a href="signup.html?plan=elite" class="btn btn-outline">Start free for 30 days</a>
       </div>
     </div>
     <p class="pricing-fineprint">Plus simple, transparent card processing on payments taken through your site — no hidden markups. Final processing rate confirmed at signup.</p>
@@ -226,8 +240,8 @@
   document.getElementById('year').textContent = new Date().getFullYear();
 
   const prices = {
-    monthly: { studio: '$19', pro: '$39', note: 'Billed monthly' },
-    annual:  { studio: '$16', pro: '$33', note: 'Billed annually — save 15%' }
+    monthly: { studio: '$19', pro: '$39', elite: '$59', note: 'Billed monthly' },
+    annual:  { studio: '$16', pro: '$33', elite: '$49', note: 'Billed annually — save 15%' }
   };
   function setBilling(mode){
     document.getElementById('btnMonthly').classList.toggle('active', mode==='monthly');
@@ -235,8 +249,10 @@
     const p = prices[mode];
     document.getElementById('priceStudio').innerHTML = `${p.studio}<span>/mo</span>`;
     document.getElementById('priceStudioPro').innerHTML = `${p.pro}<span>/mo</span>`;
+    document.getElementById('priceStudioElite').innerHTML = `${p.elite}<span>/mo</span>`;
     document.getElementById('noteStudio').textContent = p.note;
     document.getElementById('noteStudioPro').textContent = p.note;
+    document.getElementById('noteStudioElite').textContent = p.note;
   }
 
   const revealEls = document.querySelectorAll('.reveal');

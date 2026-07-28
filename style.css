@@ -63,7 +63,7 @@ header.site{position:sticky;top:0;z-index:50;background:rgba(250,246,240,.92);ba
 .pricing-toggle button:last-child{border-radius:0 20px 20px 0}
 .pricing-toggle button.active{background:var(--ink);color:#fff}
 
-.plans{display:grid;grid-template-columns:repeat(auto-fit,minmax(280px,1fr));gap:28px;max-width:800px;margin:0 auto}
+.plans{display:grid;grid-template-columns:repeat(auto-fit,minmax(270px,1fr));gap:28px;max-width:1040px;margin:0 auto}
 .plan{background:#fff;border:1px solid var(--line);border-radius:14px;padding:40px 34px;position:relative}
 .plan.featured{border:2px solid var(--accent)}
 .plan .most-popular{position:absolute;top:-14px;left:50%;transform:translateX(-50%);background:var(--accent);color:#fff;font-size:.7rem;letter-spacing:.08em;text-transform:uppercase;padding:6px 16px;border-radius:20px;font-weight:700;white-space:nowrap}

@@ -52,9 +52,10 @@ say "Provisioning not set up yet" — safe, no errors.
 
 ## Step 4 — Turn on real billing (once the Studio Book business + Stripe account exist)
 
-1. In Stripe: create two Products, each with a monthly Price and an annual
-   Price — "Studio" ($19/mo, $16/mo billed annually) and "Studio Pro"
-   ($39/mo, $33/mo billed annually). Copy each Price ID.
+1. In Stripe: create three Products, each with a monthly Price and an annual
+   Price — "Studio" ($19/mo, $16/mo billed annually), "Studio Pro" ($39/mo,
+   $33/mo billed annually), and "Studio Elite" ($59/mo, $49/mo billed
+   annually). Copy each Price ID.
 2. Add these env vars:
 
 | Env var | Value |
@@ -63,6 +64,7 @@ say "Provisioning not set up yet" — safe, no errors.
 | `STRIPE_WEBHOOK_SECRET` | Create a webhook endpoint pointing at `https://<your-domain>/.netlify/functions/stripe-webhook`, listening for `checkout.session.completed` and `customer.subscription.deleted`. Copy its signing secret. |
 | `STRIPE_PRICE_STUDIO_MONTHLY` / `STRIPE_PRICE_STUDIO_ANNUAL` | Price IDs from step 1 |
 | `STRIPE_PRICE_PRO_MONTHLY` / `STRIPE_PRICE_PRO_ANNUAL` | Price IDs from step 1 |
+| `STRIPE_PRICE_ELITE_MONTHLY` / `STRIPE_PRICE_ELITE_ANNUAL` | Price IDs from step 1 |
 
 Once these are set, signup.html automatically switches from "we'll follow up"
 to real Stripe Checkout — no code changes needed.
