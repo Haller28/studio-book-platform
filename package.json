@@ -1,7 +1,7 @@
 {
-  "name": "studio-book-platform",
+  "name": "salon-vine-platform",
   "version": "1.0.0",
-  "description": "Studio Book - subscription SaaS platform marketing site, signup/checkout, and automated salon site provisioning.",
+  "description": "Salon Vine - subscription SaaS platform marketing site, signup/checkout, and automated salon site provisioning.",
   "private": true,
   "dependencies": {
     "@netlify/blobs": "^8.1.0",

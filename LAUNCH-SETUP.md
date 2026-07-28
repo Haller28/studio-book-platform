@@ -1,8 +1,8 @@
-# Studio Book — Launch Setup Checklist
+# Salon Vine — Launch Setup Checklist
 
 Live marketing/signup site: https://verdant-sawine-7574a4.netlify.app
 Repo: https://github.com/Haller28/studio-book-platform
-Netlify team: "Studio Book"
+Netlify team: "Salon Vine"
 
 Everything below is code-complete and already deployed. Nothing here requires
 touching code again — it's all environment variables to add in Netlify
@@ -12,7 +12,7 @@ for them to take effect.
 
 ## Works right now, with zero setup
 
-- Marketing site, pricing, "why Studio Book," "how it works"
+- Marketing site, pricing, "why Salon Vine," "how it works"
 - Signup form (signup.html) — saves every request and shows a friendly
   "we'll follow up" message since billing isn't live yet
 - /admin.html — internal view of signup requests, with a one-click
@@ -37,20 +37,20 @@ So signup requests and the admin view persist instead of silently failing:
 
 ## Step 3 — Turn on automated provisioning (once you're ready to onboard real salons)
 
-Requires a Netlify Personal Access Token that belongs to the **Studio Book**
+Requires a Netlify Personal Access Token that belongs to the **Salon Vine**
 account/team (not your personal one), since it will be creating sites on
-Studio Book's behalf.
+Salon Vine's behalf.
 
 | Env var | Value |
 |---|---|
-| `PROVISIONING_NETLIFY_TOKEN` | Studio Book's own Netlify PAT — **enter this yourself** |
+| `PROVISIONING_NETLIFY_TOKEN` | Salon Vine's own Netlify PAT — **enter this yourself** |
 | `PROVISIONING_ACCOUNT_SLUG` | The Netlify team slug new salon sites should be created under |
-| `TEMPLATE_REPO` | `Haller28/salon-platform-template` (or wherever it ends up living once it's under the Studio Book GitHub org) |
+| `TEMPLATE_REPO` | `Haller28/salon-platform-template` (or wherever it ends up living once it's under the Salon Vine GitHub org) |
 
 Until this step is done, the "Provision free" button in /admin.html will just
 say "Provisioning not set up yet" — safe, no errors.
 
-## Step 4 — Turn on real billing (once the Studio Book business + Stripe account exist)
+## Step 4 — Turn on real billing (once the Salon Vine business + Stripe account exist)
 
 1. In Stripe: create three Products, each with a monthly Price and an annual
    Price — "Studio" ($19/mo, $16/mo billed annually), "Studio Pro" ($39/mo,
