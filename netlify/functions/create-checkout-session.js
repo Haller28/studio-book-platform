@@ -41,6 +41,47 @@ async function logToSheet(record) {
   }
 }
 
+
+// Also mirrors every signup to the SalonVine owner backend (Zack's side):
+// appends to the "SalonVine — Live Data" sheet that powers the owner portal
+// and emails both owners instantly. Additive alongside the Salon Vine
+// Signups sheet above — never throws, never blocks a signup.
+// The token below is the LIGHT signup-only token (can only insert signups,
+// never read); override via env if it's ever rotated.
+async function logToOwnerBackend(record) {
+  const url = process.env.SV_BACKEND_URL ||
+    'https://script.google.com/macros/s/AKfycbyXCmFCL-HuLEFvZDTsV9fIrYiaRCW06ZuNl1uYR-4DhgaJpmthlUKaAIr8rtau2_g4/exec';
+  const token = process.env.SV_BACKEND_TOKEN || 'b26b36539afb049eaf3a71401376e806';
+  try {
+    const res = await fetch(url, {
+      method: 'POST',
+      headers: { 'Content-Type': 'text/plain;charset=utf-8' },
+      body: JSON.stringify({
+        type: 'signup',
+        token,
+        salon: record.salonName,
+        name: record.ownerName,
+        email: record.email,
+        phone: record.phone,
+        website: record.oldSiteUrl,
+        plan: record.plan,
+        actor: 'salonvine.com'
+      })
+    });
+    const text = await res.text();
+    let parsed = {};
+    try { parsed = JSON.parse(text); } catch (e) { /* non-JSON */ }
+    if (!parsed.ok) {
+      console.error('Owner-backend logging returned non-ok:', text.slice(0, 300));
+      return false;
+    }
+    return true;
+  } catch (e) {
+    console.error('Owner-backend logging failed', e);
+    return false;
+  }
+}
+
 // Handles the signup form submission on signup.html.
 //
 // Two modes, auto-selected based on whether Stripe is configured yet:
@@ -75,6 +116,7 @@ exports.handler = async (event) => {
   // Primary log: the Salon Vine Signups Google Sheet. Every signup lands there
   // as a new row with the monthly price auto-computed and status "Pending".
   await logToSheet(record);
+  await logToOwnerBackend(record);
 
   // Secondary/backup: Netlify Blobs. Optional — only runs if those env vars
   // happen to be set. Never blocks the signup.
