@@ -5,6 +5,13 @@
 [functions]
   node_bundler = "esbuild"
 
+# Instant salon sites: /s/<slug> served by the universal renderer.
+# status=200 = rewrite; :splat carries the slug. MUST stay above the catch-all.
+[[redirects]]
+  from = "/s/*"
+  to = "/site.html?s=:splat"
+  status = 200
+
 [[redirects]]
   from = "/*"
   to = "/index.html"

@@ -4,11 +4,126 @@
 <meta charset="UTF-8">
 <meta name="viewport" content="width=device-width, initial-scale=1.0">
 <title>Start your salon — Salon Vine</title>
-<meta name="description" content="Create your Salon Vine account and get your own salon booking site and staff portal in minutes.">
+<meta name="description" content="Create your salon's website in about two minutes — pick a look, add your photos, and go live instantly. Free during early access.">
 <link rel="icon" type="image/png" sizes="32x32" href="favicon-32.png">
 <link rel="apple-touch-icon" href="icon-180.png">
 <link href="https://fonts.googleapis.com/css2?family=Playfair+Display:wght@500;600;700&family=Inter:wght@400;500;600;700&display=swap" rel="stylesheet">
 <link rel="stylesheet" href="style.css">
+<style>
+/* ---------- wizard-specific styles (inline on purpose) ---------- */
+.wiz-wrap{max-width:760px;margin:56px auto 80px;padding:0 24px}
+.wiz-head{text-align:center;margin-bottom:14px}
+.wiz-head h2{font-size:2rem;margin-bottom:8px}
+.wiz-head p{color:var(--ink-soft);margin:0 0 30px}
+.wiz-free{display:inline-block;background:var(--cream2);border:1px solid var(--line);border-radius:20px;padding:6px 16px;font-size:.78rem;letter-spacing:.06em;text-transform:uppercase;font-weight:600;color:var(--accent-dark);margin-bottom:18px}
+
+.wiz-steps{display:flex;justify-content:center;gap:0;list-style:none;margin:0 0 34px;padding:0;counter-reset:wiz}
+.wiz-steps li{display:flex;align-items:center;gap:9px;font-size:.78rem;font-weight:600;color:var(--ink-soft);padding:0 16px;position:relative}
+.wiz-steps li .dot{width:30px;height:30px;border-radius:50%;border:1.5px solid var(--line);background:#fff;display:flex;align-items:center;justify-content:center;font-family:var(--serif);font-size:.9rem;color:var(--ink-soft);transition:all .25s}
+.wiz-steps li.current .dot{background:var(--ink);border-color:var(--ink);color:#fff}
+.wiz-steps li.current{color:var(--ink)}
+.wiz-steps li.done .dot{background:var(--accent);border-color:var(--accent);color:#fff}
+.wiz-steps li+li:before{content:"";width:26px;height:1px;background:var(--line);margin-right:16px}
+@media(max-width:640px){.wiz-steps li span.lbl{display:none}.wiz-steps li{padding:0 8px}.wiz-steps li+li:before{width:14px;margin-right:8px}}
+
+.wiz-card{background:#fff;border:1px solid var(--line);border-radius:14px;padding:44px}
+@media(max-width:640px){.wiz-card{padding:28px 22px}}
+.wiz-panel{display:none}
+.wiz-panel.active{display:block;animation:wizIn .3s ease}
+@keyframes wizIn{from{opacity:0;transform:translateY(8px)}to{opacity:1;transform:none}}
+.wiz-panel h3{font-size:1.35rem;margin-bottom:6px}
+.wiz-panel .panel-sub{color:var(--ink-soft);font-size:.92rem;margin:0 0 26px}
+.wiz-nav{display:flex;gap:12px;margin-top:28px;align-items:center}
+.wiz-nav .btn{flex:1;text-align:center}
+.wiz-back{background:none;border:none;cursor:pointer;font-family:var(--sans);font-size:.85rem;font-weight:600;color:var(--ink-soft);padding:14px 18px}
+.wiz-back:hover{color:var(--ink)}
+.field-err{color:#b3462e;font-size:.8rem;margin-top:5px;display:none}
+.field.invalid input{border-color:#b3462e}
+.field.invalid .field-err{display:block}
+
+/* plan cards */
+.wplans{display:grid;grid-template-columns:repeat(3,1fr);gap:12px;margin-bottom:26px}
+@media(max-width:640px){.wplans{grid-template-columns:1fr}}
+.wplan{border:1.5px solid var(--line);border-radius:10px;background:#fff;cursor:pointer;text-align:left;padding:18px 16px;font-family:var(--sans);transition:border-color .2s,background .2s;position:relative}
+.wplan.active{border-color:var(--accent);background:var(--cream2)}
+.wplan .wp-name{font-weight:700;font-size:.97rem;margin-bottom:2px}
+.wplan .wp-price{font-family:var(--serif);font-size:1.35rem;margin:4px 0 2px}
+.wplan .wp-price span{font-size:.8rem;font-family:var(--sans);color:var(--ink-soft)}
+.wplan .wp-desc{font-size:.76rem;color:var(--ink-soft);line-height:1.45}
+.wplan .wp-free{display:inline-block;margin-top:8px;font-size:.68rem;letter-spacing:.05em;text-transform:uppercase;font-weight:700;color:var(--good)}
+.wplan .wp-pop{position:absolute;top:-10px;right:12px;background:var(--accent);color:#fff;font-size:.62rem;letter-spacing:.07em;text-transform:uppercase;padding:3px 10px;border-radius:12px;font-weight:700}
+.wplans-note{font-size:.78rem;color:var(--ink-soft);text-align:center;margin:-14px 0 24px}
+
+/* theme picker */
+.themes{display:grid;grid-template-columns:repeat(3,1fr);gap:12px;margin-bottom:22px}
+@media(max-width:640px){.themes{grid-template-columns:repeat(2,1fr)}}
+.theme-card{border:1.5px solid var(--line);border-radius:10px;overflow:hidden;cursor:pointer;background:#fff;padding:0;text-align:left;font-family:var(--sans);transition:border-color .2s,transform .15s}
+.theme-card:hover{transform:translateY(-2px)}
+.theme-card.active{border-color:var(--accent);box-shadow:0 0 0 2px var(--cream2)}
+.theme-mini{padding:14px 12px 10px;min-height:86px}
+.theme-mini .tm-name{font-family:var(--serif);font-size:.92rem;line-height:1.2;margin-bottom:2px}
+.theme-mini .tm-tag{font-size:.6rem;opacity:.75;margin-bottom:8px}
+.theme-mini .tm-row{display:flex;gap:4px;align-items:center}
+.theme-mini .tm-btn{height:10px;border-radius:2px;width:34px}
+.theme-mini .tm-sq{width:14px;height:14px;border-radius:3px;opacity:.85}
+.theme-label{display:flex;justify-content:space-between;align-items:center;padding:9px 12px;border-top:1px solid var(--line);font-size:.8rem;font-weight:600;background:#fff}
+.theme-label .mode{font-size:.64rem;color:var(--ink-soft);font-weight:500;letter-spacing:.05em;text-transform:uppercase}
+.accent-row{display:flex;gap:10px;flex-wrap:wrap;margin:8px 0 22px}
+.accent-dot{width:34px;height:34px;border-radius:50%;border:2px solid transparent;cursor:pointer;padding:0;position:relative;outline-offset:2px}
+.accent-dot.active{border-color:var(--ink)}
+.accent-dot.active:after{content:"✓";position:absolute;inset:0;display:flex;align-items:center;justify-content:center;color:#fff;font-size:.8rem;font-weight:700;text-shadow:0 1px 2px rgba(0,0,0,.4)}
+.sub-label{font-size:.82rem;font-weight:600;color:var(--ink-soft);margin:0 0 8px;display:block}
+
+/* photos */
+.photo-grid{display:grid;grid-template-columns:repeat(3,1fr);gap:12px;margin-bottom:18px}
+@media(max-width:520px){.photo-grid{grid-template-columns:repeat(2,1fr)}}
+.photo-slot{aspect-ratio:4/3;border-radius:8px;overflow:hidden;position:relative;background:var(--cream2)}
+.photo-slot img{width:100%;height:100%;object-fit:cover}
+.photo-slot .ph-remove{position:absolute;top:6px;right:6px;width:26px;height:26px;border-radius:50%;border:none;background:rgba(33,29,26,.72);color:#fff;font-size:1rem;line-height:1;cursor:pointer;display:flex;align-items:center;justify-content:center}
+.photo-slot .ph-size{position:absolute;bottom:0;left:0;right:0;background:linear-gradient(transparent,rgba(0,0,0,.55));color:#fff;font-size:.64rem;padding:14px 8px 5px;text-align:right}
+.photo-slot .ph-status{position:absolute;top:6px;left:6px;font-size:.62rem;background:rgba(255,255,255,.9);border-radius:10px;padding:2px 8px;font-weight:600;display:none}
+.photo-add{aspect-ratio:4/3;border:1.5px dashed var(--line);border-radius:8px;background:#fff;cursor:pointer;display:flex;flex-direction:column;align-items:center;justify-content:center;gap:6px;color:var(--ink-soft);font-family:var(--sans);font-size:.8rem;font-weight:600;transition:border-color .2s}
+.photo-add:hover{border-color:var(--accent);color:var(--accent-dark)}
+.photo-add svg{width:22px;height:22px}
+.photo-hint{font-size:.78rem;color:var(--ink-soft);margin:0 0 8px}
+.skip-link{display:inline-block;font-size:.85rem;color:var(--ink-soft);text-decoration:underline;cursor:pointer;background:none;border:none;padding:12px 4px;font-family:var(--sans)}
+
+/* summary */
+.sum-table{border:1px solid var(--line);border-radius:10px;overflow:hidden;margin-bottom:22px}
+.sum-row{display:flex;justify-content:space-between;align-items:center;gap:16px;padding:13px 16px;border-bottom:1px solid var(--line);font-size:.9rem}
+.sum-row:last-child{border-bottom:none}
+.sum-row .k{color:var(--ink-soft);font-size:.8rem;font-weight:600;letter-spacing:.03em;text-transform:uppercase;flex-shrink:0}
+.sum-row .v{text-align:right;font-weight:500;display:flex;align-items:center;gap:8px;justify-content:flex-end;flex-wrap:wrap}
+.sum-swatch{width:16px;height:16px;border-radius:4px;border:1px solid var(--line);display:inline-block}
+.sum-dot{width:14px;height:14px;border-radius:50%;display:inline-block}
+.sum-thumbs{display:flex;gap:4px}
+.sum-thumbs img{width:30px;height:30px;object-fit:cover;border-radius:4px}
+.sum-url{font-family:ui-monospace,Menlo,monospace;font-size:.82rem;background:var(--cream2);padding:3px 8px;border-radius:5px;word-break:break-all}
+.go-fineprint{font-size:.78rem;color:var(--ink-soft);text-align:center;margin-top:16px}
+.go-fineprint a{text-decoration:underline}
+
+/* progress + result panels */
+.prog-list{list-style:none;margin:20px 0 0;padding:0}
+.prog-list li{display:flex;align-items:center;gap:12px;padding:11px 0;border-bottom:1px dashed var(--line);font-size:.92rem;color:var(--ink-soft)}
+.prog-list li:last-child{border-bottom:none}
+.prog-list li .pi{width:22px;height:22px;flex-shrink:0;display:flex;align-items:center;justify-content:center}
+.prog-list li.doing{color:var(--ink);font-weight:600}
+.prog-list li.done{color:var(--good)}
+.prog-list li.fail{color:#b3462e}
+.spinner{width:16px;height:16px;border:2px solid var(--line);border-top-color:var(--accent);border-radius:50%;animation:spin .8s linear infinite}
+@keyframes spin{to{transform:rotate(360deg)}}
+.err-box{background:#fbe8e8;border:1px solid rgba(179,70,46,.3);border-radius:10px;padding:18px;font-size:.9rem;margin-top:20px}
+.err-box strong{color:#b3462e}
+.err-box .saved-note{display:block;margin-top:8px;font-size:.82rem;color:var(--ink-soft)}
+.success-card{text-align:center;padding:10px 0}
+.success-card .big-check{width:62px;height:62px;border-radius:50%;background:var(--good);color:#fff;display:flex;align-items:center;justify-content:center;margin:0 auto 20px;font-size:1.7rem}
+.success-card h3{font-size:1.7rem;margin-bottom:10px}
+.success-card p{color:var(--ink-soft);margin:0 0 10px}
+.live-link{display:inline-block;font-family:ui-monospace,Menlo,monospace;font-size:.95rem;background:var(--cream2);border:1px solid var(--line);padding:12px 20px;border-radius:8px;margin:14px 0 22px;word-break:break-all}
+.live-link:hover{border-color:var(--accent)}
+.success-actions{display:flex;gap:12px;justify-content:center;flex-wrap:wrap}
+#confettiCanvas{position:fixed;inset:0;pointer-events:none;z-index:200}
+</style>
 </head>
 <body>
 
@@ -21,155 +136,674 @@
   </nav>
 </header>
 
-<div class="signup-wrap">
-  <h2 style="text-align:center;margin-bottom:8px">Start your salon</h2>
-  <p style="text-align:center;color:var(--ink-soft);margin-bottom:36px">Free for 30 days. We'll ask for a card so your site keeps running when the trial ends — nothing is charged today.</p>
+<div class="wiz-wrap">
+  <div class="wiz-head">
+    <span class="wiz-free">Free during early access</span>
+    <h2>Create your salon's site</h2>
+    <p>Pick a look, add your photos, and you're live in about two minutes.</p>
+  </div>
 
-  <div class="signup-card">
-    <div class="plan-pick" id="planPick">
-      <button type="button" data-plan="studio" class="pp-btn">
-        <div class="pp-name">Studio</div>
-        <div class="pp-price">$19/mo</div>
-      </button>
-      <button type="button" data-plan="pro" class="pp-btn active">
-        <div class="pp-name">Studio Pro</div>
-        <div class="pp-price">$39/mo</div>
-      </button>
-      <button type="button" data-plan="elite" class="pp-btn">
-        <div class="pp-name">Studio Elite</div>
-        <div class="pp-price">$59/mo</div>
-      </button>
-    </div>
+  <ol class="wiz-steps" id="wizSteps">
+    <li class="current"><span class="dot">1</span><span class="lbl">Your info</span></li>
+    <li><span class="dot">2</span><span class="lbl">Your look</span></li>
+    <li><span class="dot">3</span><span class="lbl">Your work</span></li>
+    <li><span class="dot">4</span><span class="lbl">Go live</span></li>
+  </ol>
 
-    <form id="signupForm">
-      <div class="field">
+  <div class="wiz-card">
+
+    <!-- ================= STEP 1 — Your info ================= -->
+    <section class="wiz-panel active" id="step1">
+      <h3>Your info</h3>
+      <p class="panel-sub">Tell us about your salon. Every plan is free during early access.</p>
+
+      <div class="wplans" id="planPick">
+        <button type="button" class="wplan" data-plan="studio">
+          <div class="wp-name">Studio</div>
+          <div class="wp-price">$19<span>/mo</span></div>
+          <div class="wp-desc">Your salon site, gallery &amp; booking requests.</div>
+          <span class="wp-free">Free for now</span>
+        </button>
+        <button type="button" class="wplan active" data-plan="pro">
+          <span class="wp-pop">Most popular</span>
+          <div class="wp-name">Studio Pro</div>
+          <div class="wp-price">$39<span>/mo</span></div>
+          <div class="wp-desc">Everything in Studio plus services menu &amp; priority support.</div>
+          <span class="wp-free">Free for now</span>
+        </button>
+        <button type="button" class="wplan" data-plan="elite">
+          <div class="wp-name">Studio Elite</div>
+          <div class="wp-price">$59<span>/mo</span></div>
+          <div class="wp-desc">Everything in Pro plus full booking calendar when it launches.</div>
+          <span class="wp-free">Free for now</span>
+        </button>
+      </div>
+      <div class="wplans-note" style="padding:14px 16px;border:1px solid var(--line);border-radius:8px;background:var(--cream2)">
+        <div style="font-size:.8rem;font-weight:600;letter-spacing:.08em;text-transform:uppercase;color:var(--accent);margin-bottom:6px">How billing works</div>
+        <ul style="margin:0;padding-left:18px;font-size:.86rem;color:var(--ink-soft);line-height:1.7">
+          <li><strong style="color:var(--ink)">$0 today — no card needed.</strong> Everything is free during early access.</li>
+          <li>The prices above are what your plan will cost once billing launches.</li>
+          <li>We'll email you well before anything is ever charged, and you can cancel anytime — no fees, no contract.</li>
+        </ul>
+      </div>
+
+      <div class="field" id="fSalon">
         <label for="salonName">Salon name</label>
-        <input type="text" id="salonName" placeholder="e.g. The Hair Loft" required>
+        <input type="text" id="salonName" placeholder="e.g. The Hair Loft" autocomplete="organization" required>
+        <div class="field-err">Please enter your salon's name.</div>
       </div>
-      <div class="field">
+      <div class="field" id="fName">
         <label for="ownerName">Your name</label>
-        <input type="text" id="ownerName" placeholder="Owner / manager name" required>
+        <input type="text" id="ownerName" placeholder="Owner / manager name" autocomplete="name" required>
+        <div class="field-err">Please enter your name.</div>
       </div>
-      <div class="field">
+      <div class="field" id="fEmail">
         <label for="email">Email</label>
-        <input type="email" id="email" placeholder="you@yoursalon.com" required>
+        <input type="email" id="email" placeholder="you@yoursalon.com" autocomplete="email" required>
+        <div class="field-err">Please enter a valid email — it's how we send your site link.</div>
       </div>
       <div class="field">
         <label for="phone">Phone</label>
-        <input type="tel" id="phone" placeholder="(555) 555-5555">
+        <input type="tel" id="phone" placeholder="(555) 555-5555" autocomplete="tel">
       </div>
       <div class="field">
         <label for="oldSiteUrl">Existing website (optional)</label>
         <input type="url" id="oldSiteUrl" placeholder="https://your-old-site.com">
       </div>
-      <div id="billingSummary" style="margin-top:22px;padding:16px 18px;border:1px solid var(--line);border-radius:8px;background:var(--cream2)">
-        <div style="font-size:.82rem;font-weight:600;letter-spacing:.08em;text-transform:uppercase;color:var(--accent);margin-bottom:8px">How billing works</div>
-        <ul style="margin:0;padding-left:18px;font-size:.86rem;color:var(--ink-soft);line-height:1.7">
-          <li><strong id="bsToday" style="color:var(--ink)">$0 today.</strong> Your card is saved but not charged.</li>
-          <li>Your free trial runs <strong id="bsTrial" style="color:var(--ink)">30 days</strong>, ending <strong id="bsDate" style="color:var(--ink)"></strong>.</li>
-          <li>After that, <strong id="bsRenew" style="color:var(--ink)"></strong> — and the same amount every month after, automatically, until you cancel.</li>
-          <li>Cancel anytime from your account settings. No fees, no contract.</li>
-        </ul>
+
+      <div class="wiz-nav">
+        <button type="button" class="btn btn-primary" id="toStep2">Continue</button>
+      </div>
+    </section>
+
+    <!-- ================= STEP 2 — Your look ================= -->
+    <section class="wiz-panel" id="step2">
+      <h3>Your look</h3>
+      <p class="panel-sub">Choose a style for your site — you can change it any time.</p>
+
+      <span class="sub-label">Theme</span>
+      <div class="themes" id="themeGrid"></div>
+
+      <span class="sub-label">Accent color</span>
+      <div class="accent-row" id="accentRow"></div>
+
+      <div class="field">
+        <label for="tagline">Tagline (optional)</label>
+        <input type="text" id="tagline" maxlength="90" placeholder="e.g. Color, cuts &amp; care in downtown Boise">
       </div>
 
-      <button type="submit" class="btn btn-primary" style="width:100%;margin-top:18px" id="submitBtn">Continue to secure checkout</button>
-      <p style="font-size:.78rem;color:var(--ink-soft);text-align:center;margin-top:16px">By continuing you agree to Salon Vine's <a href="terms.html" style="text-decoration:underline">Terms of Service</a> and <a href="privacy.html" style="text-decoration:underline">Privacy Policy</a>, and you authorise Salon Vine to charge your card the recurring monthly amount above once your free trial ends, until you cancel.</p>
-    </form>
-    <div id="formMsg" style="display:none;margin-top:16px;padding:14px;border-radius:8px;background:var(--cream2);font-size:.88rem;text-align:center"></div>
+      <div class="wiz-nav">
+        <button type="button" class="wiz-back" data-back="1">&larr; Back</button>
+        <button type="button" class="btn btn-primary" id="toStep3">Continue</button>
+      </div>
+    </section>
+
+    <!-- ================= STEP 3 — Your work ================= -->
+    <section class="wiz-panel" id="step3">
+      <h3>Your work</h3>
+      <p class="panel-sub">Add up to 6 photos of your best work or your space. We'll shrink them for the web automatically.</p>
+
+      <p class="photo-hint" id="photoHint">0 of 6 photos added</p>
+      <div class="photo-grid" id="photoGrid">
+        <button type="button" class="photo-add" id="photoAdd">
+          <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.6"><path d="M12 5v14M5 12h14" stroke-linecap="round"/></svg>
+          Add photos
+        </button>
+      </div>
+      <input type="file" id="photoInput" accept="image/*" multiple style="display:none">
+      <div id="photoErr" style="display:none;color:#b3462e;font-size:.82rem;margin-bottom:10px"></div>
+
+      <div class="wiz-nav">
+        <button type="button" class="wiz-back" data-back="2">&larr; Back</button>
+        <button type="button" class="btn btn-primary" id="toStep4">Continue</button>
+      </div>
+      <div style="text-align:center"><button type="button" class="skip-link" id="skipPhotos">No photos handy? Add them later</button></div>
+    </section>
+
+    <!-- ================= STEP 4 — Go live ================= -->
+    <section class="wiz-panel" id="step4">
+      <h3>Go live</h3>
+      <p class="panel-sub">One last look — then your site goes live instantly.</p>
+
+      <div class="sum-table" id="sumTable"></div>
+
+      <div class="wiz-nav">
+        <button type="button" class="wiz-back" data-back="3">&larr; Back</button>
+        <button type="button" class="btn btn-accent" id="createBtn" style="font-size:.95rem;padding:17px 28px">Create my site</button>
+      </div>
+      <p class="go-fineprint">Free during early access — no credit card. By continuing you agree to Salon Vine's <a href="terms.html">Terms of Service</a> and <a href="privacy.html">Privacy Policy</a>.</p>
+    </section>
+
+    <!-- ================= PROGRESS ================= -->
+    <section class="wiz-panel" id="panelProgress">
+      <h3>Building your site&hellip;</h3>
+      <p class="panel-sub">This usually takes just a few seconds.</p>
+      <ul class="prog-list" id="progList"></ul>
+      <div class="err-box" id="errBox" style="display:none">
+        <strong>Something went wrong.</strong> <span id="errText"></span>
+        <span class="saved-note" id="errSavedNote" style="display:none">Don't worry — your details were saved and we'll reach out to finish your site by hand if needed.</span>
+        <div style="margin-top:14px;display:flex;gap:10px;flex-wrap:wrap">
+          <button type="button" class="btn btn-primary" id="retryBtn" style="padding:12px 22px">Try again</button>
+          <a class="btn btn-outline" href="mailto:hello@salonvine.com" style="padding:12px 22px">Email us instead</a>
+        </div>
+      </div>
+    </section>
+
+    <!-- ================= SUCCESS ================= -->
+    <section class="wiz-panel" id="panelSuccess">
+      <div class="success-card">
+        <div class="big-check">✓</div>
+        <h3>Your site is live</h3>
+        <p><strong id="successSalon"></strong> is officially on the web — free during early access.</p>
+        <a class="live-link" id="liveLink" target="_blank" rel="noopener"></a>
+        <p id="photoNote" style="display:none;font-size:.85rem"></p>
+        <p style="font-size:.9rem">We'll email you when owner login for editing is ready. Until then, just reply to any Salon Vine email to request changes.</p>
+        <div class="success-actions">
+          <a class="btn btn-primary" id="viewSiteBtn" target="_blank" rel="noopener">View my site</a>
+          <a class="btn btn-outline" href="index.html">Back to salonvine.com</a>
+        </div>
+      </div>
+    </section>
+
   </div>
 </div>
 
 <footer>
-  <p>© <span id="year"></span> Salon Vine.</p>
+  <div class="foot-links">
+    <a href="index.html#features">Features</a>
+    <a href="index.html#pricing">Pricing</a>
+    <a href="login.html">Log In</a>
+    <a href="terms.html">Terms</a>
+    <a href="privacy.html">Privacy</a>
+  </div>
+  <p>© <span id="year"></span> Salon Vine. Built for independent salons.</p>
 </footer>
 
 <script>
+'use strict';
 document.getElementById('year').textContent = new Date().getFullYear();
 
-let selectedPlan = 'pro';
-const params = new URLSearchParams(window.location.search);
-if (params.get('plan') === 'studio' || params.get('plan') === 'elite') selectedPlan = params.get('plan');
+/* ---------------- config ---------------- */
+var SV_EXEC = window.SV_EXEC_OVERRIDE ||
+  'https://script.google.com/macros/s/AKfycbyXCmFCL-HuLEFvZDTsV9fIrYiaRCW06ZuNl1uYR-4DhgaJpmthlUKaAIr8rtau2_g4/exec';
+var SV_SIGNUP_TOKEN = 'b26b36539afb049eaf3a71401376e806'; /* light public token only */
+var SITE_BASE = 'https://salonvine.com/s/';
 
-// Keep these in step with PLANS in netlify/functions/_lib.js
-const PLAN_LABELS = {
-  studio: { name: 'Studio',       price: 19 },
-  pro:    { name: 'Studio Pro',   price: 39 },
-  elite:  { name: 'Studio Elite', price: 59 }
+/* ---------------- themes / accents (shared with site.html) ---------------- */
+var THEMES = {
+  'classic-cream': {label:'Classic Cream', mode:'light', bg:'#faf6f0', bg2:'#f2ece2', surface:'#ffffff', ink:'#211d1a', soft:'#5c5148', accent:'#a8836a'},
+  'midnight':      {label:'Midnight',      mode:'dark',  bg:'#12151f', bg2:'#181c2a', surface:'#1d2231', ink:'#edeff7', soft:'#a9afc4', accent:'#c9a86a'},
+  'rose-gold':     {label:'Rose Gold',     mode:'light', bg:'#faf2f0', bg2:'#f4e4e0', surface:'#ffffff', ink:'#3b2b2a', soft:'#7d635f', accent:'#c0777f'},
+  'sage-spa':      {label:'Sage Spa',      mode:'light', bg:'#f4f7f2', bg2:'#e7efe2', surface:'#ffffff', ink:'#26302a', soft:'#5f7064', accent:'#6f8f74'},
+  'bold-noir':     {label:'Bold Noir',     mode:'dark',  bg:'#151312', bg2:'#1d1a18', surface:'#221e1c', ink:'#f3ede6', soft:'#b3a89e', accent:'#c58a5a'},
+  'ocean':         {label:'Ocean',         mode:'light', bg:'#f2f7f9', bg2:'#e2edf1', surface:'#ffffff', ink:'#1f2d33', soft:'#54676f', accent:'#3e7d92'}
 };
-const TRIAL_DAYS = 30;
+var ACCENTS = [
+  {hex:'#a8836a', label:'Bronze'},
+  {hex:'#c0777f', label:'Rose'},
+  {hex:'#c9a86a', label:'Gold'},
+  {hex:'#6f8f74', label:'Sage'},
+  {hex:'#3e7d92', label:'Teal'},
+  {hex:'#9a7fae', label:'Plum'}
+];
 
-function syncPlanButtons(){
-  document.querySelectorAll('.pp-btn').forEach(btn=>{
-    btn.classList.toggle('active', btn.dataset.plan === selectedPlan);
+/* ---------------- state ---------------- */
+var state = {
+  plan: 'pro',
+  theme: 'classic-cream',
+  accent: THEMES['classic-cream'].accent,
+  accentManual: false,      /* has the user picked an accent explicitly? */
+  photos: [],               /* [{dataUrl, kb, status:'pending'|'uploading'|'done'|'failed'}] */
+  leadSaved: false,         /* fallback plain signup already succeeded? */
+  siteResult: null          /* {slug,url} once signupSite succeeds */
+};
+var MAX_PHOTOS = 6;
+
+/* ---------------- plan preselect via ?plan= ---------------- */
+(function () {
+  var p = new URLSearchParams(window.location.search).get('plan');
+  if (p === 'studio' || p === 'pro' || p === 'elite') { state.plan = p; }
+  syncPlans();
+})();
+function syncPlans() {
+  document.querySelectorAll('.wplan').forEach(function (b) {
+    b.classList.toggle('active', b.dataset.plan === state.plan);
   });
-  syncBillingSummary();
 }
-
-// Spell out exactly what gets charged and when, for the plan they've picked.
-function syncBillingSummary(){
-  const p = PLAN_LABELS[selectedPlan] || PLAN_LABELS.pro;
-  const end = new Date();
-  end.setDate(end.getDate() + TRIAL_DAYS);
-  const pretty = end.toLocaleDateString(undefined, { month:'long', day:'numeric', year:'numeric' });
-
-  document.getElementById('bsTrial').textContent = TRIAL_DAYS + ' days';
-  document.getElementById('bsDate').textContent  = pretty;
-  document.getElementById('bsRenew').textContent = p.name + ' renews at $' + p.price + '/month';
-}
-syncPlanButtons();
-
-document.querySelectorAll('.pp-btn').forEach(btn=>{
-  btn.addEventListener('click', ()=>{
-    selectedPlan = btn.dataset.plan;
-    syncPlanButtons();
-  });
+document.querySelectorAll('.wplan').forEach(function (b) {
+  b.addEventListener('click', function () { state.plan = b.dataset.plan; syncPlans(); });
 });
 
-document.getElementById('signupForm').addEventListener('submit', async (e)=>{
-  e.preventDefault();
-  const submitBtn = document.getElementById('submitBtn');
-  const msg = document.getElementById('formMsg');
-  submitBtn.disabled = true;
-  submitBtn.textContent = 'Setting things up...';
+/* ---------------- step navigation ---------------- */
+var STEP_IDS = ['step1', 'step2', 'step3', 'step4'];
+function showPanel(id) {
+  document.querySelectorAll('.wiz-panel').forEach(function (s) {
+    s.classList.toggle('active', s.id === id);
+  });
+  var idx = STEP_IDS.indexOf(id);
+  var items = document.querySelectorAll('#wizSteps li');
+  items.forEach(function (li, i) {
+    li.classList.toggle('current', i === idx);
+    li.classList.toggle('done', idx === -1 ? true : i < idx);
+  });
+  window.scrollTo({ top: 0, behavior: 'smooth' });
+}
+document.querySelectorAll('.wiz-back').forEach(function (b) {
+  b.addEventListener('click', function () { showPanel('step' + b.dataset.back); });
+});
 
-  const payload = {
-    plan: selectedPlan,
-    salonName: document.getElementById('salonName').value.trim(),
-    ownerName: document.getElementById('ownerName').value.trim(),
+function validEmail(v) { return /^[^\s@]+@[^\s@]+\.[^\s@]+$/.test(v); }
+function markInvalid(id, bad) { document.getElementById(id).classList.toggle('invalid', bad); }
+
+document.getElementById('toStep2').addEventListener('click', function () {
+  var salon = document.getElementById('salonName').value.trim();
+  var name = document.getElementById('ownerName').value.trim();
+  var email = document.getElementById('email').value.trim();
+  markInvalid('fSalon', !salon);
+  markInvalid('fName', !name);
+  markInvalid('fEmail', !validEmail(email));
+  if (!salon || !name || !validEmail(email)) { return; }
+  showPanel('step2');
+});
+document.getElementById('toStep3').addEventListener('click', function () { showPanel('step3'); });
+document.getElementById('toStep4').addEventListener('click', function () { buildSummary(); showPanel('step4'); });
+document.getElementById('skipPhotos').addEventListener('click', function () { buildSummary(); showPanel('step4'); });
+
+/* ---------------- theme picker ---------------- */
+function buildThemeGrid() {
+  var grid = document.getElementById('themeGrid');
+  grid.innerHTML = '';
+  Object.keys(THEMES).forEach(function (key) {
+    var t = THEMES[key];
+    var b = document.createElement('button');
+    b.type = 'button';
+    b.className = 'theme-card' + (key === state.theme ? ' active' : '');
+    b.dataset.theme = key;
+    b.setAttribute('aria-label', t.label + ' theme (' + t.mode + ')');
+    var accent = (key === state.theme) ? state.accent : t.accent;
+    b.innerHTML =
+      '<div class="theme-mini" style="background:' + t.bg + ';color:' + t.ink + '">' +
+        '<div class="tm-name">Salon Name</div>' +
+        '<div class="tm-tag" style="color:' + t.soft + '">Your tagline here</div>' +
+        '<div class="tm-row">' +
+          '<span class="tm-btn" style="background:' + accent + '"></span>' +
+          '<span class="tm-sq" style="background:' + t.bg2 + '"></span>' +
+          '<span class="tm-sq" style="background:' + accent + '33"></span>' +
+          '<span class="tm-sq" style="background:' + t.bg2 + '"></span>' +
+        '</div>' +
+      '</div>' +
+      '<div class="theme-label"><span>' + t.label + '</span><span class="mode">' + t.mode + '</span></div>';
+    b.addEventListener('click', function () {
+      state.theme = key;
+      if (!state.accentManual) { state.accent = t.accent; }
+      buildThemeGrid(); buildAccentRow();
+    });
+    grid.appendChild(b);
+  });
+}
+function buildAccentRow() {
+  var row = document.getElementById('accentRow');
+  row.innerHTML = '';
+  var options = ACCENTS.slice();
+  /* make sure the theme's default accent is always one of the dots */
+  var def = THEMES[state.theme].accent;
+  if (!options.some(function (a) { return a.hex === def; })) {
+    options.unshift({ hex: def, label: 'Theme default' });
+  }
+  options.forEach(function (a) {
+    var b = document.createElement('button');
+    b.type = 'button';
+    b.className = 'accent-dot' + (a.hex === state.accent ? ' active' : '');
+    b.style.background = a.hex;
+    b.title = a.label;
+    b.setAttribute('aria-label', a.label + ' accent');
+    b.addEventListener('click', function () {
+      state.accent = a.hex;
+      state.accentManual = true;
+      buildAccentRow(); buildThemeGrid();
+    });
+    row.appendChild(b);
+  });
+}
+buildThemeGrid();
+buildAccentRow();
+
+/* ---------------- photos ---------------- */
+var photoInput = document.getElementById('photoInput');
+document.getElementById('photoAdd').addEventListener('click', function () { photoInput.click(); });
+photoInput.addEventListener('change', function () {
+  var files = Array.prototype.slice.call(photoInput.files || []);
+  photoInput.value = '';
+  addPhotos(files);
+});
+
+function addPhotos(files) {
+  var err = document.getElementById('photoErr');
+  err.style.display = 'none';
+  var room = MAX_PHOTOS - state.photos.length;
+  if (files.length > room) {
+    err.textContent = 'You can add up to ' + MAX_PHOTOS + ' photos — the first ' + room + ' were kept.';
+    err.style.display = 'block';
+    files = files.slice(0, room);
+  }
+  files.forEach(function (f) {
+    if (!/^image\//.test(f.type)) {
+      err.textContent = 'Skipped "' + f.name + '" — not an image file.';
+      err.style.display = 'block';
+      return;
+    }
+    downscaleToJpeg(f, 1200, 0.8).then(function (dataUrl) {
+      if (state.photos.length >= MAX_PHOTOS) { return; }
+      state.photos.push({ dataUrl: dataUrl, kb: Math.round(dataUrl.length * 0.75 / 1024), status: 'pending' });
+      renderPhotos();
+    }).catch(function () {
+      err.textContent = 'Couldn’t read "' + f.name + '" — try a different photo.';
+      err.style.display = 'block';
+    });
+  });
+}
+
+/* canvas downscale: longest side <= maxDim, JPEG ~80% */
+function downscaleToJpeg(file, maxDim, quality) {
+  return new Promise(function (resolve, reject) {
+    var url = URL.createObjectURL(file);
+    var img = new Image();
+    img.onload = function () {
+      try {
+        var scale = Math.min(1, maxDim / Math.max(img.naturalWidth, img.naturalHeight));
+        var w = Math.max(1, Math.round(img.naturalWidth * scale));
+        var h = Math.max(1, Math.round(img.naturalHeight * scale));
+        var c = document.createElement('canvas');
+        c.width = w; c.height = h;
+        var ctx = c.getContext('2d');
+        ctx.drawImage(img, 0, 0, w, h);
+        URL.revokeObjectURL(url);
+        resolve(c.toDataURL('image/jpeg', quality));
+      } catch (e) { URL.revokeObjectURL(url); reject(e); }
+    };
+    img.onerror = function () { URL.revokeObjectURL(url); reject(new Error('bad image')); };
+    img.src = url;
+  });
+}
+
+function renderPhotos() {
+  var grid = document.getElementById('photoGrid');
+  grid.innerHTML = '';
+  state.photos.forEach(function (p, i) {
+    var d = document.createElement('div');
+    d.className = 'photo-slot';
+    d.innerHTML =
+      '<img src="' + p.dataUrl + '" alt="Photo ' + (i + 1) + '">' +
+      '<span class="ph-status"></span>' +
+      '<button type="button" class="ph-remove" aria-label="Remove photo ' + (i + 1) + '">&times;</button>' +
+      '<span class="ph-size">' + p.kb + ' KB</span>';
+    d.querySelector('.ph-remove').addEventListener('click', function () {
+      state.photos.splice(i, 1);
+      renderPhotos();
+    });
+    grid.appendChild(d);
+  });
+  if (state.photos.length < MAX_PHOTOS) {
+    var add = document.createElement('button');
+    add.type = 'button';
+    add.className = 'photo-add';
+    add.id = 'photoAdd';
+    add.innerHTML = '<svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.6"><path d="M12 5v14M5 12h14" stroke-linecap="round"/></svg>Add photos';
+    add.addEventListener('click', function () { photoInput.click(); });
+    grid.appendChild(add);
+  }
+  document.getElementById('photoHint').textContent = state.photos.length + ' of ' + MAX_PHOTOS + ' photos added';
+}
+
+/* ---------------- slug ---------------- */
+function slugify(s) {
+  return String(s || '').toLowerCase()
+    .replace(/&/g, ' and ')
+    .replace(/[^a-z0-9]+/g, '-')
+    .replace(/^-+|-+$/g, '')
+    .slice(0, 60).replace(/-+$/g, '') || 'salon';
+}
+
+/* ---------------- summary ---------------- */
+function buildSummary() {
+  var t = THEMES[state.theme];
+  var salon = document.getElementById('salonName').value.trim();
+  var tagline = document.getElementById('tagline').value.trim();
+  var slug = slugify(salon);
+  var planNames = { studio: 'Studio — $19/mo', pro: 'Studio Pro — $39/mo', elite: 'Studio Elite — $59/mo' };
+  var thumbs = state.photos.map(function (p) { return '<img src="' + p.dataUrl + '" alt="">'; }).join('');
+  var rows = [
+    ['Salon', esc(salon)],
+    ['Plan', esc(planNames[state.plan] || state.plan) + ' <span style="color:var(--good);font-weight:700;font-size:.75rem">FREE FOR NOW</span>'],
+    ['Theme', '<span class="sum-swatch" style="background:' + t.bg + '"></span> ' + esc(t.label)],
+    ['Accent', '<span class="sum-dot" style="background:' + state.accent + '"></span>'],
+    ['Tagline', tagline ? esc(tagline) : '<span style="color:var(--ink-soft)">—</span>'],
+    ['Photos', state.photos.length ? '<span class="sum-thumbs">' + thumbs + '</span>' : '<span style="color:var(--ink-soft)">Add later</span>'],
+    ['Your link', '<span class="sum-url">salonvine.com/s/' + esc(slug) + '</span>']
+  ];
+  document.getElementById('sumTable').innerHTML = rows.map(function (r) {
+    return '<div class="sum-row"><span class="k">' + r[0] + '</span><span class="v">' + r[1] + '</span></div>';
+  }).join('');
+}
+function esc(s) {
+  return String(s).replace(/[&<>"']/g, function (c) {
+    return { '&': '&amp;', '<': '&lt;', '>': '&gt;', '"': '&quot;', "'": '&#39;' }[c];
+  });
+}
+
+/* ---------------- backend calls ---------------- */
+function postJson(payload) {
+  /* text/plain => "simple request" => no CORS preflight (Apps Script) */
+  return fetch(SV_EXEC, {
+    method: 'POST',
+    headers: { 'Content-Type': 'text/plain;charset=utf-8' },
+    body: JSON.stringify(payload)
+  }).then(function (res) {
+    if (!res.ok) { throw new Error('HTTP ' + res.status); }
+    return res.json();
+  });
+}
+
+function basePayload() {
+  return {
+    token: SV_SIGNUP_TOKEN,
+    salon: document.getElementById('salonName').value.trim(),
+    name: document.getElementById('ownerName').value.trim(),
     email: document.getElementById('email').value.trim(),
     phone: document.getElementById('phone').value.trim(),
-    oldSiteUrl: document.getElementById('oldSiteUrl').value.trim()
+    website: document.getElementById('oldSiteUrl').value.trim(),
+    plan: state.plan,
+    theme: state.theme,
+    accent: state.accent,
+    tagline: document.getElementById('tagline').value.trim(),
+    slug: slugify(document.getElementById('salonName').value.trim())
   };
+}
 
-  try {
-    const res = await fetch('/.netlify/functions/create-checkout-session', {
-      method: 'POST',
-      headers: { 'Content-Type': 'application/json' },
-      body: JSON.stringify(payload)
+/* ---------------- submit flow ---------------- */
+var progItems = [];
+function setProg(i, cls, text) {
+  var li = progItems[i];
+  if (!li) { return; }
+  li.className = cls;
+  var pi = li.querySelector('.pi');
+  if (cls === 'doing') { pi.innerHTML = '<span class="spinner"></span>'; }
+  else if (cls === 'done') { pi.textContent = '✓'; }
+  else if (cls === 'fail') { pi.textContent = '✕'; }
+  else { pi.textContent = '·'; }
+  if (text) { li.querySelector('.pt').textContent = text; }
+}
+
+function initProgress() {
+  var list = document.getElementById('progList');
+  list.innerHTML = '';
+  progItems = [];
+  var labels = ['Saving your details', 'Creating your site'];
+  if (state.photos.length) { labels.push('Uploading photos (0/' + state.photos.length + ')'); }
+  labels.forEach(function (l) {
+    var li = document.createElement('li');
+    li.innerHTML = '<span class="pi">·</span><span class="pt"></span>';
+    li.querySelector('.pt').textContent = l;
+    list.appendChild(li);
+    progItems.push(li);
+  });
+  document.getElementById('errBox').style.display = 'none';
+}
+
+document.getElementById('createBtn').addEventListener('click', submitAll);
+document.getElementById('retryBtn').addEventListener('click', submitAll);
+
+function submitAll() {
+  showPanel('panelProgress');
+  initProgress();
+  var payload = basePayload();
+
+  setProg(0, 'doing');
+  setProg(1, '', null);
+
+  var sitePromise = state.siteResult
+    ? Promise.resolve(state.siteResult) /* retry after photos-only failure */
+    : postJson(Object.assign({ type: 'signupSite' }, payload)).then(function (data) {
+        if (!data || !data.ok || !data.slug) {
+          throw new Error((data && data.error) || 'Unexpected response from server');
+        }
+        return { slug: data.slug, url: data.url || (SITE_BASE + data.slug) };
+      });
+
+  sitePromise.then(function (site) {
+    state.siteResult = site;
+    state.leadSaved = true;
+    /* Also log to the legacy pipeline (partner's Signups sheet). Our
+       backend de-dupes its mirrored copy, so this never double-counts. */
+    try {
+      fetch('/.netlify/functions/create-checkout-session', {
+        method: 'POST',
+        headers: { 'Content-Type': 'application/json' },
+        body: JSON.stringify({
+          plan: payload.plan, salonName: payload.salon, ownerName: payload.name,
+          email: payload.email, phone: payload.phone, oldSiteUrl: payload.website
+        })
+      }).catch(function () {});
+    } catch (e) { /* non-blocking */ }
+    setProg(0, 'done');
+    setProg(1, 'done');
+    return uploadPhotos(site.slug).then(function (uploaded) {
+      showSuccess(site, uploaded);
     });
-    const data = await res.json();
+  }).catch(function (err) {
+    setProg(0, 'fail');
+    setProg(1, 'fail');
+    /* FALLBACK: never lose the lead — record a plain signup */
+    var fallback = state.leadSaved
+      ? Promise.resolve(true)
+      : postJson(Object.assign({ type: 'signup' }, payload))
+          .then(function (d) { return !!(d && d.ok); })
+          .catch(function () { return false; });
+    fallback.then(function (saved) {
+      if (saved) { state.leadSaved = true; }
+      var box = document.getElementById('errBox');
+      document.getElementById('errText').textContent =
+        (err && err.message ? err.message : 'Please check your connection.') + ' ';
+      document.getElementById('errSavedNote').style.display = saved ? 'block' : 'none';
+      box.style.display = 'block';
+    });
+  });
+}
 
-    if (data.checkoutUrl) {
-      window.location.href = data.checkoutUrl;
-      return;
-    }
+function uploadPhotos(slug) {
+  if (!state.photos.length) { return Promise.resolve(0); }
+  var idx = progItems.length - 1;
+  setProg(idx, 'doing', 'Uploading photos (0/' + state.photos.length + ')');
+  var done = 0, failed = 0;
+  var chain = Promise.resolve();
+  state.photos.forEach(function (p, i) {
+    chain = chain.then(function () {
+      if (p.status === 'done') { done++; return; } /* already uploaded on a prior try */
+      p.status = 'uploading';
+      return postJson({ type: 'sitePhoto', token: SV_SIGNUP_TOKEN, slug: slug, n: i + 1, data: p.dataUrl })
+        .then(function (d) {
+          if (d && d.ok) { p.status = 'done'; done++; }
+          else { p.status = 'failed'; failed++; }
+        })
+        .catch(function () { p.status = 'failed'; failed++; })
+        .then(function () {
+          setProg(idx, 'doing', 'Uploading photos (' + done + '/' + state.photos.length + ')');
+        });
+    });
+  });
+  return chain.then(function () {
+    if (failed && done === 0) { setProg(idx, 'fail', 'Photos didn’t upload — you can add them later'); }
+    else if (failed) { setProg(idx, 'done', done + ' of ' + state.photos.length + ' photos uploaded'); }
+    else { setProg(idx, 'done', 'Photos uploaded'); }
+    return done;
+  });
+}
 
-    if (data.pending) {
-      msg.style.display = 'block';
-      msg.textContent = data.message || "Thanks! We've got your details — billing isn't live quite yet, so our team will reach out personally to get your salon set up.";
-      submitBtn.textContent = 'Request received';
-      return;
-    }
-
-    throw new Error(data.error || 'Something went wrong');
-  } catch (err) {
-    msg.style.display = 'block';
-    msg.style.background = '#fbe8e8';
-    msg.textContent = "We couldn't process that — please try again in a moment.";
-    submitBtn.disabled = false;
-    submitBtn.textContent = 'Continue to checkout';
+function showSuccess(site, uploaded) {
+  var salon = document.getElementById('salonName').value.trim();
+  document.getElementById('successSalon').textContent = salon;
+  var link = document.getElementById('liveLink');
+  link.textContent = site.url.replace(/^https?:\/\//, '');
+  link.href = site.url;
+  document.getElementById('viewSiteBtn').href = site.url;
+  var note = document.getElementById('photoNote');
+  var failedCount = state.photos.filter(function (p) { return p.status === 'failed'; }).length;
+  if (failedCount) {
+    note.style.display = 'block';
+    note.textContent = uploaded + ' of ' + state.photos.length + ' photos made it up — no stress, we can add the rest later.';
+  } else {
+    note.style.display = 'none';
   }
-});
+  showPanel('panelSuccess');
+  confetti();
+}
+
+/* ---------------- tasteful confetti ---------------- */
+function confetti() {
+  if (window.matchMedia && window.matchMedia('(prefers-reduced-motion: reduce)').matches) { return; }
+  var canvas = document.createElement('canvas');
+  canvas.id = 'confettiCanvas';
+  document.body.appendChild(canvas);
+  var ctx = canvas.getContext('2d');
+  var W = canvas.width = window.innerWidth;
+  var H = canvas.height = window.innerHeight;
+  var colors = [state.accent, '#a8836a', '#c9a86a', '#211d1a', '#f2ece2'];
+  var parts = [];
+  for (var i = 0; i < 90; i++) {
+    parts.push({
+      x: W / 2 + (Math.random() - 0.5) * W * 0.35,
+      y: H * 0.28,
+      vx: (Math.random() - 0.5) * 7,
+      vy: -(2 + Math.random() * 7),
+      w: 5 + Math.random() * 5,
+      h: 8 + Math.random() * 6,
+      rot: Math.random() * Math.PI,
+      vr: (Math.random() - 0.5) * 0.25,
+      color: colors[i % colors.length],
+      life: 1
+    });
+  }
+  var start = null;
+  function frame(ts) {
+    if (!start) { start = ts; }
+    var t = (ts - start) / 1000;
+    ctx.clearRect(0, 0, W, H);
+    parts.forEach(function (p) {
+      p.vy += 0.16; p.x += p.vx; p.y += p.vy; p.rot += p.vr;
+      p.life = Math.max(0, 1 - t / 2.4);
+      ctx.save();
+      ctx.globalAlpha = p.life;
+      ctx.translate(p.x, p.y);
+      ctx.rotate(p.rot);
+      ctx.fillStyle = p.color;
+      ctx.fillRect(-p.w / 2, -p.h / 2, p.w, p.h);
+      ctx.restore();
+    });
+    if (t < 2.5) { requestAnimationFrame(frame); }
+    else { canvas.remove(); }
+  }
+  requestAnimationFrame(frame);
+}
 </script>
 
 </body>
