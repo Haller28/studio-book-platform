@@ -1,4 +1,4 @@
-// Shared helpers for Studio Book platform functions.
+// Shared helpers for Salon Vine platform functions.
 
 function json(statusCode, body) {
   return {
@@ -46,7 +46,7 @@ function getPlan(planKey) {
   return PLANS[planKey] || PLANS.pro;
 }
 
-// Stripe is optional until the real Studio Book business/Stripe account exists.
+// Stripe is optional until the real Salon Vine business/Stripe account exists.
 // Everything that touches Stripe checks this first and falls back to a
 // "pending signup" path so the site is fully usable (and looks complete)
 // before real billing credentials are in place.
@@ -61,6 +61,6 @@ function getStripe() {
   return new Stripe(process.env.STRIPE_SECRET_KEY, { apiVersion: '2024-06-20' });
 }
 
-const SITE_URL = process.env.URL || process.env.SITE_URL || 'https://studiobook.app';
+const SITE_URL = process.env.URL || process.env.SITE_URL || 'https://salonvine.com';
 
 module.exports = { json, PLANS, getPlan, stripeConfigured, getStripe, SITE_URL };

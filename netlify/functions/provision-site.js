@@ -3,17 +3,17 @@ const { getStore } = require('@netlify/blobs');
 const { json } = require('./_lib');
 
 // Automated site provisioning: turns a paid (or approved-free) signup into a
-// live, fully independent Studio Book site cloned from salon-platform-template.
+// live, fully independent Salon Vine site cloned from salon-platform-template.
 //
 // Requires a Netlify Personal Access Token with permission to create sites
-// under the Studio Book Netlify account/team. That token does not exist yet —
-// it belongs to the new Studio Book business entity being set up tomorrow —
+// under the Salon Vine Netlify account/team. That token does not exist yet —
+// it belongs to the new Salon Vine business entity being set up tomorrow —
 // so every step below is gated on PROVISIONING_NETLIFY_TOKEN being present.
 // Until then, calls return { ok:false, reason:'not_configured' } and the
 // signup is simply left in the signup-requests store for manual follow-up.
 //
-// Required env vars once real Studio Book infra exists:
-//   PROVISIONING_NETLIFY_TOKEN   - Netlify PAT owned by Studio Book (not Dylan's personal one)
+// Required env vars once real Salon Vine infra exists:
+//   PROVISIONING_NETLIFY_TOKEN   - Netlify PAT owned by Salon Vine (not Dylan's personal one)
 //   PROVISIONING_ACCOUNT_SLUG    - Netlify team/account slug new sites are created under
 //   TEMPLATE_REPO                - e.g. "Haller28/salon-platform-template"
 //   PROVISION_ADMIN_SECRET       - shared secret required in x-admin-secret header
@@ -70,7 +70,7 @@ async function provisionSite({ salonName, ownerName, email, phone, plan }) {
   }
 
   const baseSlug = slugify(salonName);
-  const siteName = `studiobook-${baseSlug}-${crypto.randomBytes(2).toString('hex')}`;
+  const siteName = `salonvine-${baseSlug}-${crypto.randomBytes(2).toString('hex')}`;
 
   // 1. Create the site, cloned from the shared template repo.
   const site = await netlifyFetch(`/${process.env.PROVISIONING_ACCOUNT_SLUG}/sites`, {
@@ -145,8 +145,8 @@ async function provisionSite({ salonName, ownerName, email, phone, plan }) {
       await transporter.sendMail({
         from: process.env.GMAIL_USER,
         to: record.email,
-        subject: `${salonName} is live on Studio Book`,
-        text: `Hi ${ownerName},\n\nYour Studio Book site is ready: ${siteUrl}\n\nUse bootstrap code ${bootstrapCode} the first time you log in to claim your owner account, then start adding your services, team, and photos.\n\n— Studio Book`
+        subject: `${salonName} is live on Salon Vine`,
+        text: `Hi ${ownerName},\n\nYour Salon Vine site is ready: ${siteUrl}\n\nUse bootstrap code ${bootstrapCode} the first time you log in to claim your owner account, then start adding your services, team, and photos.\n\n— Salon Vine`
       });
     }
   } catch (e) {
@@ -180,7 +180,7 @@ exports.handler = async (event) => {
   try {
     const result = await provisionSite({ salonName, ownerName, email, phone, plan });
     if (!result.ok && result.reason === 'not_configured') {
-      return json(200, { ok: false, reason: 'not_configured', message: 'Provisioning is not configured yet — set PROVISIONING_NETLIFY_TOKEN, PROVISIONING_ACCOUNT_SLUG, and TEMPLATE_REPO once the Studio Book Netlify account exists.' });
+      return json(200, { ok: false, reason: 'not_configured', message: 'Provisioning is not configured yet — set PROVISIONING_NETLIFY_TOKEN, PROVISIONING_ACCOUNT_SLUG, and TEMPLATE_REPO once the Salon Vine Netlify account exists.' });
     }
     return json(200, result);
   } catch (e) {

@@ -8,7 +8,7 @@ const { provisionSite } = require('./provision-site');
 // customer.subscription.updated.
 //
 // Inert until STRIPE_SECRET_KEY and STRIPE_WEBHOOK_SECRET are set (they
-// don't exist yet — pending the real Studio Book Stripe account). Netlify
+// don't exist yet — pending the real Salon Vine Stripe account). Netlify
 // Functions receive a parsed event.body string, which is what Stripe's
 // signature verification needs raw, so we use event.body directly (Netlify
 // does not re-serialize it) rather than JSON.parse-ing before verification.

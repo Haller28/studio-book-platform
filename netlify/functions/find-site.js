@@ -3,7 +3,7 @@ const { json } = require('./_lib');
 
 // Powers the "Log In" lookup on login.html. Each subscriber's salon runs on
 // its own independent site/domain (see the provisioning architecture in
-// provision-site.js), so Studio Book itself has no shared login — this just
+// provision-site.js), so Salon Vine itself has no shared login — this just
 // looks up which site belongs to a given email and redirects them there.
 exports.handler = async (event) => {
   if (event.httpMethod !== 'POST') return json(405, { error: 'Method not allowed' });
@@ -21,7 +21,7 @@ exports.handler = async (event) => {
     });
     const record = await store.get(email, { type: 'json' });
     if (!record || !record.siteUrl) {
-      return json(404, { error: "We couldn't find a Studio Book site for that email." });
+      return json(404, { error: "We couldn't find a Salon Vine site for that email." });
     }
     return json(200, { siteUrl: record.siteUrl, salonName: record.salonName });
   } catch (e) {

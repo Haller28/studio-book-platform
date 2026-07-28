@@ -7,7 +7,7 @@ const { json, getPlan, stripeConfigured, getStripe, SITE_URL } = require('./_lib
 // Two modes, auto-selected based on whether Stripe is configured yet:
 //   1. Stripe configured  -> create a real Checkout Session, return its URL.
 //      Successful payment fires stripe-webhook.js, which provisions the site.
-//   2. Stripe NOT configured (true today, until the Studio Book business +
+//   2. Stripe NOT configured (true today, until the Salon Vine business +
 //      Stripe account exist) -> save the signup request to Blobs so it's not
 //      lost, and tell the client it's pending. This is exactly the flow Dylan
 //      wants for his wife's salon: her request gets captured, nothing is
@@ -85,6 +85,6 @@ exports.handler = async (event) => {
   // Billing not set up yet — normal/expected state for now.
   return json(200, {
     pending: true,
-    message: `Thanks, ${ownerName}! We've got ${salonName}'s details. Studio Book billing is being finalized — we'll personally reach out at ${record.email} to get your site set up.`
+    message: `Thanks, ${ownerName}! We've got ${salonName}'s details. Salon Vine billing is being finalized — we'll personally reach out at ${record.email} to get your site set up.`
   });
 };

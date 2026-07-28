@@ -1,7 +1,7 @@
 const { getStore } = require('@netlify/blobs');
 const { json } = require('./_lib');
 
-// Powers admin.html — lets Dylan see who has requested a Studio Book site
+// Powers admin.html — lets Dylan see who has requested a Salon Vine site
 // before Stripe billing exists (e.g. his wife's salon, or anyone else who
 // fills out signup.html while it's still in "pending" mode). Gated by a
 // shared secret so random visitors can't read the signup list.
