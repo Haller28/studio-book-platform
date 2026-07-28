@@ -9,6 +9,30 @@ const { json } = require('./_lib');
 // endpoint the signup form writes to. This previously read Netlify Blobs,
 // which was never configured, so every lookup failed with a generic error
 // no matter which email was entered.
+// Instant sites (built by the salonvine.com signup wizard) live in the owner
+// backend's Salons sheet — check there FIRST so wizard customers get sent
+// straight to their live site. Falls through to the legacy signup-sheet
+// lookup below for pre-wizard signups.
+async function findInstantSite(email) {
+  const url = process.env.SV_BACKEND_URL ||
+    'https://script.google.com/macros/s/AKfycbyXCmFCL-HuLEFvZDTsV9fIrYiaRCW06ZuNl1uYR-4DhgaJpmthlUKaAIr8rtau2_g4/exec';
+  const token = process.env.SV_BACKEND_TOKEN || 'b26b36539afb049eaf3a71401376e806';
+  try {
+    const res = await fetch(url, {
+      method: 'POST',
+      headers: { 'Content-Type': 'text/plain;charset=utf-8' },
+      body: JSON.stringify({ type: 'findSite', token, email })
+    });
+    const parsed = JSON.parse(await res.text());
+    if (parsed && parsed.ok && parsed.found && parsed.url) {
+      return { siteUrl: parsed.url, salonName: parsed.salonName || '' };
+    }
+  } catch (e) {
+    console.error('findInstantSite failed (falling back to legacy lookup)', e);
+  }
+  return null;
+}
+
 exports.handler = async (event) => {
   if (event.httpMethod !== 'POST') return json(405, { error: 'Method not allowed' });
 
@@ -18,6 +42,13 @@ exports.handler = async (event) => {
   const email = String(body.email || '').toLowerCase().trim();
   if (!email) return json(400, { error: 'Email is required.' });
 
+  // 1) Instant sites first (wizard-built salons go straight to their site)
+  const instant = await findInstantSite(email);
+  if (instant) {
+    return json(200, { siteUrl: instant.siteUrl, salonName: instant.salonName });
+  }
+
+  // 2) Legacy lookup in the Salon Vine Signups sheet
   const url = process.env.SHEET_ENDPOINT_URL;
   const secret = process.env.SHEET_SECRET;
   if (!url || !secret) {
