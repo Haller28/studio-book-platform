@@ -182,6 +182,23 @@ footer.foot-v2{background:#fff;border-top:1px solid var(--line);padding:56px 24p
 .section.tight{padding:84px 0}
 .alt-bg{background:var(--cream2)}
 </style>
+
+<style>
+/* Mobile header: keep the buttons clear of the Salon Vine wordmark.
+   Desktop is untouched — this only applies below 560px. */
+@media (max-width: 560px){
+  header.site .nav{ gap:14px; padding:14px 16px; flex-wrap:nowrap; }
+  header.site .brand{ font-size:1.05rem; white-space:nowrap; flex:0 0 auto; }
+  header.site .nav-cta{ gap:8px; flex:0 1 auto; min-width:0; }
+  header.site .nav-cta .btn{ padding:9px 12px; font-size:.68rem; letter-spacing:.03em; white-space:nowrap; }
+}
+@media (max-width: 420px){
+  header.site .nav{ gap:10px; padding:12px 12px; }
+  header.site .brand{ font-size:.98rem; }
+  header.site .nav-cta{ gap:6px; }
+  header.site .nav-cta .btn{ padding:8px 9px; font-size:.62rem; letter-spacing:0; }
+}
+</style>
 </head>
 <body>
 
@@ -195,7 +212,7 @@ footer.foot-v2{background:#fff;border-top:1px solid var(--line);padding:56px 24p
       <li><a href="#showcase">Demo sites</a></li>
     </ul>
     <div class="nav-cta">
-      <a href="login.html" class="btn btn-outline" style="padding:11px 20px">Log in</a>
+      <a class='btn btn-outline' href='/login' style='padding:11px 20px'>Log in</a>
       <a href="/signup" class="btn btn-primary" style="padding:11px 20px" id="navSignup">Build my site free</a>
     </div>
   </nav>
@@ -306,6 +323,67 @@ footer.foot-v2{background:#fff;border-top:1px solid var(--line);padding:56px 24p
   </div>
 </section>
 
+<!-- ================= PRICING ================= -->
+<section class="section alt-bg" id="pricing">
+  <div class="container">
+    <span class="section-label">Simple pricing</span>
+    <h2>Three plans. No surprises.</h2>
+    <p class="section-sub">Pick the plan that fits where your salon's headed — they're all free right now.</p>
+
+    <div class="ea-banner reveal"><strong>Early access:</strong> every plan is free right now — founding salons lock in launch pricing when billing starts.</div>
+
+    <div class="plans">
+      <div class="plan reveal">
+        <h3>Studio</h3>
+        <div class="price">$19<span>/mo</span></div>
+        <div class="price-note">Free during early access</div>
+        <ul>
+          <li><svg fill="none" stroke="currentColor" stroke-width="2" viewBox="0 0 24 24"><polyline points="20 6 9 17 4 12"/></svg>Your salon site at salonvine.com/s/</li>
+          <li><svg fill="none" stroke="currentColor" stroke-width="2" viewBox="0 0 24 24"><polyline points="20 6 9 17 4 12"/></svg>Photo gallery of your work</li>
+          <li><svg fill="none" stroke="currentColor" stroke-width="2" viewBox="0 0 24 24"><polyline points="20 6 9 17 4 12"/></svg>Booking-request form with email alerts</li>
+          <li><svg fill="none" stroke="currentColor" stroke-width="2" viewBox="0 0 24 24"><polyline points="20 6 9 17 4 12"/></svg>Six themes + your accent color</li>
+        </ul>
+        <a href="/signup?plan=studio" class="btn btn-outline">Start free</a>
+      </div>
+      <div class="plan featured reveal">
+        <div class="most-popular">Most popular</div>
+        <h3>Studio Pro</h3>
+        <div class="price">$39<span>/mo</span></div>
+        <div class="price-note">Free during early access</div>
+        <ul>
+          <li><svg fill="none" stroke="currentColor" stroke-width="2" viewBox="0 0 24 24"><polyline points="20 6 9 17 4 12"/></svg>Everything in Studio</li>
+          <li><svg fill="none" stroke="currentColor" stroke-width="2" viewBox="0 0 24 24"><polyline points="20 6 9 17 4 12"/></svg>Services &amp; prices menu</li>
+          <li><svg fill="none" stroke="currentColor" stroke-width="2" viewBox="0 0 24 24"><polyline points="20 6 9 17 4 12"/></svg>Instagram + hours on your site</li>
+          <li><svg fill="none" stroke="currentColor" stroke-width="2" viewBox="0 0 24 24"><polyline points="20 6 9 17 4 12"/></svg>Priority support</li>
+        </ul>
+        <a href="/signup?plan=pro" class="btn btn-accent">Start free</a>
+      </div>
+      <div class="plan reveal">
+        <h3>Studio Elite</h3>
+        <div class="price">$59<span>/mo</span></div>
+        <div class="price-note">Free during early access</div>
+        <ul>
+          <li><svg fill="none" stroke="currentColor" stroke-width="2" viewBox="0 0 24 24"><polyline points="20 6 9 17 4 12"/></svg>Everything in Studio Pro</li>
+          <li><svg fill="none" stroke="currentColor" stroke-width="2" viewBox="0 0 24 24"><polyline points="20 6 9 17 4 12"/></svg>First in line for new features</li>
+          <li><svg fill="none" stroke="currentColor" stroke-width="2" viewBox="0 0 24 24"><polyline points="20 6 9 17 4 12"/></svg>Full booking calendar when it launches</li>
+          <li><svg fill="none" stroke="currentColor" stroke-width="2" viewBox="0 0 24 24"><polyline points="20 6 9 17 4 12"/></svg>Hands-on help moving from your old site</li>
+        </ul>
+        <a href="/signup?plan=elite" class="btn btn-outline">Start free</a>
+      </div>
+    </div>
+
+    <div class="billing-box reveal">
+      <div class="bb-head">How billing works</div>
+      <ul>
+        <li><strong>$0 today — no card needed.</strong> Everything is free during early access.</li>
+        <li>The prices above are what your plan will cost once billing launches.</li>
+        <li>We'll email you well before anything is ever charged, and you can cancel anytime — no fees, no contract.</li>
+      </ul>
+    </div>
+  </div>
+</section>
+
+<!-- ================= FOUNDER NOTE ================= -->
 <!-- ================= HOW IT WORKS ================= -->
 <section class="section" id="how">
   <div class="container">
@@ -409,67 +487,6 @@ footer.foot-v2{background:#fff;border-top:1px solid var(--line);padding:56px 24p
   </div>
 </section>
 
-<!-- ================= PRICING ================= -->
-<section class="section alt-bg" id="pricing">
-  <div class="container">
-    <span class="section-label">Simple pricing</span>
-    <h2>Three plans. No surprises.</h2>
-    <p class="section-sub">Pick the plan that fits where your salon's headed — they're all free right now.</p>
-
-    <div class="ea-banner reveal"><strong>Early access:</strong> every plan is free right now — founding salons lock in launch pricing when billing starts.</div>
-
-    <div class="plans">
-      <div class="plan reveal">
-        <h3>Studio</h3>
-        <div class="price">$19<span>/mo</span></div>
-        <div class="price-note">Free during early access</div>
-        <ul>
-          <li><svg fill="none" stroke="currentColor" stroke-width="2" viewBox="0 0 24 24"><polyline points="20 6 9 17 4 12"/></svg>Your salon site at salonvine.com/s/</li>
-          <li><svg fill="none" stroke="currentColor" stroke-width="2" viewBox="0 0 24 24"><polyline points="20 6 9 17 4 12"/></svg>Photo gallery of your work</li>
-          <li><svg fill="none" stroke="currentColor" stroke-width="2" viewBox="0 0 24 24"><polyline points="20 6 9 17 4 12"/></svg>Booking-request form with email alerts</li>
-          <li><svg fill="none" stroke="currentColor" stroke-width="2" viewBox="0 0 24 24"><polyline points="20 6 9 17 4 12"/></svg>Six themes + your accent color</li>
-        </ul>
-        <a href="/signup?plan=studio" class="btn btn-outline">Start free</a>
-      </div>
-      <div class="plan featured reveal">
-        <div class="most-popular">Most popular</div>
-        <h3>Studio Pro</h3>
-        <div class="price">$39<span>/mo</span></div>
-        <div class="price-note">Free during early access</div>
-        <ul>
-          <li><svg fill="none" stroke="currentColor" stroke-width="2" viewBox="0 0 24 24"><polyline points="20 6 9 17 4 12"/></svg>Everything in Studio</li>
-          <li><svg fill="none" stroke="currentColor" stroke-width="2" viewBox="0 0 24 24"><polyline points="20 6 9 17 4 12"/></svg>Services &amp; prices menu</li>
-          <li><svg fill="none" stroke="currentColor" stroke-width="2" viewBox="0 0 24 24"><polyline points="20 6 9 17 4 12"/></svg>Instagram + hours on your site</li>
-          <li><svg fill="none" stroke="currentColor" stroke-width="2" viewBox="0 0 24 24"><polyline points="20 6 9 17 4 12"/></svg>Priority support</li>
-        </ul>
-        <a href="/signup?plan=pro" class="btn btn-accent">Start free</a>
-      </div>
-      <div class="plan reveal">
-        <h3>Studio Elite</h3>
-        <div class="price">$59<span>/mo</span></div>
-        <div class="price-note">Free during early access</div>
-        <ul>
-          <li><svg fill="none" stroke="currentColor" stroke-width="2" viewBox="0 0 24 24"><polyline points="20 6 9 17 4 12"/></svg>Everything in Studio Pro</li>
-          <li><svg fill="none" stroke="currentColor" stroke-width="2" viewBox="0 0 24 24"><polyline points="20 6 9 17 4 12"/></svg>First in line for new features</li>
-          <li><svg fill="none" stroke="currentColor" stroke-width="2" viewBox="0 0 24 24"><polyline points="20 6 9 17 4 12"/></svg>Full booking calendar when it launches</li>
-          <li><svg fill="none" stroke="currentColor" stroke-width="2" viewBox="0 0 24 24"><polyline points="20 6 9 17 4 12"/></svg>Hands-on help moving from your old site</li>
-        </ul>
-        <a href="/signup?plan=elite" class="btn btn-outline">Start free</a>
-      </div>
-    </div>
-
-    <div class="billing-box reveal">
-      <div class="bb-head">How billing works</div>
-      <ul>
-        <li><strong>$0 today — no card needed.</strong> Everything is free during early access.</li>
-        <li>The prices above are what your plan will cost once billing launches.</li>
-        <li>We'll email you well before anything is ever charged, and you can cancel anytime — no fees, no contract.</li>
-      </ul>
-    </div>
-  </div>
-</section>
-
-<!-- ================= FOUNDER NOTE ================= -->
 <section class="section" id="about">
   <div class="container founder reveal">
     <span class="section-label">A note from us</span>
@@ -538,7 +555,7 @@ footer.foot-v2{background:#fff;border-top:1px solid var(--line);padding:56px 24p
         <li><a href="#features">Features</a></li>
         <li><a href="#pricing">Pricing</a></li>
         <li><a href="#showcase">Demo sites</a></li>
-        <li><a href="login.html">Log in</a></li>
+        <li><a href='/login'>Log in</a></li>
       </ul>
     </div>
     <div>
@@ -552,8 +569,8 @@ footer.foot-v2{background:#fff;border-top:1px solid var(--line);padding:56px 24p
     <div>
       <h4>Legal</h4>
       <ul>
-        <li><a href="privacy.html">Privacy</a></li>
-        <li><a href="terms.html">Terms</a></li>
+        <li><a href='/privacy'>Privacy</a></li>
+        <li><a href='/terms'>Terms</a></li>
       </ul>
     </div>
   </div>
