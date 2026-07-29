@@ -5,6 +5,18 @@
 [functions]
   node_bundler = "esbuild"
 
+# V2 pretty URLs used by the homepage CTAs (?salon=/?plan= query
+# strings pass through automatically on 200 rewrites).
+[[redirects]]
+  from = "/signup"
+  to = "/signup.html"
+  status = 200
+
+[[redirects]]
+  from = "/login"
+  to = "/login.html"
+  status = 200
+
 # Instant salon sites: /s/<slug> served by the universal renderer.
 # status=200 = rewrite; :splat carries the slug. MUST stay above the catch-all.
 [[redirects]]

@@ -3,13 +3,185 @@
 <head>
 <meta charset="UTF-8">
 <meta name="viewport" content="width=device-width, initial-scale=1.0">
-<title>Salon Vine — Booking &amp; Business Software for Independent Salons</title>
-<meta name="description" content="Salon Vine gives your salon its own booking site, staff portal, and payments — with a personalized app icon your clients won't get anywhere else. Simple, transparent pricing, no surprises.">
+<title>Salon Vine — Your salon's website, live in 60 seconds</title>
+<meta name="description" content="Type your salon's name and get a beautiful website with a photo gallery, services menu and booking-request form — live in about a minute. Free during early access, no credit card required.">
+<!-- Photos: Unsplash License (free for commercial use, no attribution required) -->
 <link rel="preconnect" href="https://fonts.googleapis.com">
+<link rel="preconnect" href="https://images.unsplash.com">
 <link rel="icon" type="image/png" sizes="32x32" href="favicon-32.png">
 <link rel="apple-touch-icon" href="icon-180.png">
-<link href="https://fonts.googleapis.com/css2?family=Playfair+Display:wght@500;600;700&family=Inter:wght@400;500;600;700&display=swap" rel="stylesheet">
+<link href="https://fonts.googleapis.com/css2?family=Playfair+Display:ital,wght@0,500;0,600;0,700;1,500&family=Inter:wght@400;500;600;700&display=swap" rel="stylesheet">
 <link rel="stylesheet" href="style.css">
+<style>
+/* ============================================================
+   Homepage V2 styles (inline on purpose — style.css stays
+   byte-identical so signup/login/terms keep rendering as-is)
+   ============================================================ */
+
+/* ---------- hero: product entry ---------- */
+.hero-v2{padding:72px 0 88px;overflow:hidden}
+.hero-v2 .container{display:grid;grid-template-columns:1.05fr .95fr;gap:56px;align-items:center}
+@media(max-width:900px){.hero-v2 .container{grid-template-columns:1fr;gap:48px}}
+.hero-v2 .eyebrow{letter-spacing:.22em;text-transform:uppercase;font-size:.76rem;color:var(--accent);margin-bottom:18px;font-weight:600;display:block}
+.hero-v2 h1{font-size:clamp(2.5rem,5vw,3.7rem);line-height:1.08;margin:0 0 20px;text-align:left}
+.hero-v2 h1 em{color:var(--accent);font-style:italic}
+.hero-v2 .sub{font-size:1.12rem;color:var(--ink-soft);max-width:520px;margin:0 0 30px;line-height:1.65}
+.hero-form{display:flex;gap:10px;max-width:520px;flex-wrap:wrap}
+.hero-form input{flex:1;min-width:210px;padding:16px 18px;border:1.5px solid var(--line);border-radius:6px;font-family:var(--sans);font-size:1rem;background:#fff;color:var(--ink)}
+.hero-form input:focus{outline:2px solid var(--accent);outline-offset:1px;border-color:var(--accent)}
+.hero-form .btn{white-space:nowrap;padding:16px 26px}
+.hero-note-v2{font-size:.82rem;color:var(--ink-soft);margin-top:14px}
+.hero-note-v2 strong{color:var(--good)}
+
+/* hero visual: photo + phone mockup */
+.hero-visual{position:relative;min-height:430px}
+.hero-visual .hero-photo{width:88%;margin-left:auto;border-radius:14px;overflow:hidden;box-shadow:0 24px 60px rgba(33,29,26,.18);aspect-ratio:4/5;max-height:520px}
+.hero-visual .hero-photo img{width:100%;height:100%;object-fit:cover}
+@media(max-width:900px){.hero-visual{min-height:0}.hero-visual .hero-photo{width:100%;aspect-ratio:16/10;max-height:340px}}
+
+/* the phone: a pure-CSS miniature of a Midnight-theme salon site */
+.phone{position:absolute;left:-6px;bottom:-26px;width:198px;border-radius:28px;background:#0b0d14;padding:10px 8px;box-shadow:0 24px 50px rgba(20,18,30,.45),0 0 0 1.5px rgba(255,255,255,.08);transform:rotate(-3deg)}
+@media(max-width:900px){.phone{left:6px;bottom:-20px;width:172px}}
+.phone .ph-notch{width:64px;height:16px;background:#0b0d14;border-radius:0 0 12px 12px;position:absolute;top:10px;left:50%;transform:translateX(-50%);z-index:2}
+.phone .ph-screen{border-radius:20px;overflow:hidden;background:#12151f;color:#edeff7;font-size:7px;line-height:1.5}
+.mini-nav{display:flex;justify-content:space-between;align-items:center;padding:16px 10px 6px;border-bottom:1px solid rgba(255,255,255,.1)}
+.mini-nav .mn-brand{font-family:var(--serif);font-size:8.5px}
+.mini-nav .mn-brand em{color:#c9a86a;font-style:normal}
+.mini-nav .mn-btn{background:#c9a86a;color:#12151f;border-radius:2px;padding:2px 6px;font-size:5.5px;font-weight:700;letter-spacing:.06em;text-transform:uppercase}
+.mini-hero{text-align:center;padding:14px 10px 12px}
+.mini-hero .mh-eyebrow{font-size:4.5px;letter-spacing:.25em;text-transform:uppercase;color:#c9a86a;font-weight:600;margin-bottom:4px}
+.mini-hero .mh-name{font-family:var(--serif);font-size:13px;line-height:1.15;margin-bottom:3px}
+.mini-hero .mh-rule{width:18px;height:1px;background:#c9a86a;margin:4px auto}
+.mini-hero .mh-tag{font-family:var(--serif);font-style:italic;font-size:6px;color:#a9afc4;margin-bottom:7px}
+.mini-hero .mh-cta{display:inline-block;background:#c9a86a;color:#12151f;border-radius:2px;padding:3.5px 9px;font-size:5.5px;font-weight:700;letter-spacing:.07em;text-transform:uppercase}
+.mini-gallery{display:grid;grid-template-columns:repeat(3,1fr);gap:3px;padding:0 8px 8px}
+.mini-gallery span{aspect-ratio:4/3;border-radius:2.5px;display:block}
+.mini-gallery span:nth-child(1){background:linear-gradient(135deg,#3a3348,#6b5a6e)}
+.mini-gallery span:nth-child(2){background:linear-gradient(135deg,#54423c,#8a6f56)}
+.mini-gallery span:nth-child(3){background:linear-gradient(135deg,#2c3242,#5d6b85)}
+.mini-svc{margin:0 8px 10px;background:#1d2231;border-radius:4px;padding:6px 8px}
+.mini-svc .ms-head{font-family:var(--serif);font-size:6.5px;text-align:center;margin-bottom:4px}
+.mini-svc .ms-row{display:flex;justify-content:space-between;font-size:5.5px;color:#a9afc4;padding:2.5px 0;border-bottom:1px dashed rgba(255,255,255,.12)}
+.mini-svc .ms-row:last-child{border-bottom:none}
+.mini-svc .ms-row b{color:#c9a86a;font-weight:600}
+
+/* ---------- proof strip: Made with SalonVine ---------- */
+.showcase-grid{display:grid;grid-template-columns:repeat(3,1fr);gap:26px;max-width:1020px;margin:0 auto}
+@media(max-width:860px){.showcase-grid{grid-template-columns:1fr;max-width:420px}}
+.show-card{background:#fff;border:1px solid var(--line);border-radius:12px;overflow:hidden;display:flex;flex-direction:column;transition:transform .2s ease,box-shadow .2s ease}
+.show-card:hover{transform:translateY(-3px);box-shadow:0 14px 34px rgba(33,29,26,.10)}
+.show-mini{padding:0;position:relative}
+.show-mini .sm-bar{height:22px;display:flex;align-items:center;gap:4px;padding:0 10px;border-bottom:1px solid rgba(0,0,0,.08)}
+.show-mini .sm-bar i{width:6px;height:6px;border-radius:50%;background:rgba(128,128,128,.35);display:block}
+.show-mini .sm-body{padding:18px 14px 20px;text-align:center;min-height:118px}
+.show-mini .sm-name{font-family:var(--serif);font-size:1.05rem;line-height:1.2;margin-bottom:3px}
+.show-mini .sm-tag{font-size:.62rem;opacity:.72;margin-bottom:9px}
+.show-mini .sm-cta{display:inline-block;border-radius:2px;padding:4px 11px;font-size:.55rem;font-weight:700;letter-spacing:.07em;text-transform:uppercase;margin-bottom:11px}
+.show-mini .sm-shots{display:flex;gap:4px;justify-content:center}
+.show-mini .sm-shots i{width:30px;height:22px;border-radius:3px;display:block}
+.show-meta{padding:15px 18px 18px;border-top:1px solid var(--line);display:flex;align-items:center;justify-content:space-between;gap:10px}
+.show-meta .sw-name{font-weight:600;font-size:.93rem}
+.show-meta .sw-kind{display:block;font-size:.72rem;color:var(--ink-soft);margin-top:1px}
+.show-meta .sw-kind.real{color:var(--good);font-weight:600}
+.show-meta a{font-size:.8rem;font-weight:700;color:var(--accent-dark);white-space:nowrap}
+.show-meta a:hover{text-decoration:underline}
+.show-stat{text-align:center;margin-top:38px}
+.show-stat .stat-chip{display:inline-flex;align-items:baseline;gap:10px;background:#fff;border:1px solid var(--line);border-radius:40px;padding:12px 26px}
+.show-stat .stat-chip b{font-family:var(--serif);font-size:1.35rem;color:var(--accent-dark)}
+.show-stat .stat-chip span{font-size:.85rem;color:var(--ink-soft)}
+
+/* ---------- how it works with photos ---------- */
+.how-grid{display:grid;grid-template-columns:repeat(3,1fr);gap:30px;max-width:1000px;margin:0 auto}
+@media(max-width:820px){.how-grid{grid-template-columns:1fr;max-width:400px}}
+.how-step{text-align:center}
+.how-step .hs-photo{border-radius:12px;overflow:hidden;aspect-ratio:4/3;margin-bottom:20px;box-shadow:0 10px 26px rgba(33,29,26,.10);position:relative}
+.how-step .hs-photo img{width:100%;height:100%;object-fit:cover}
+.how-step .hs-photo .hs-num{position:absolute;top:12px;left:12px;width:38px;height:38px;border-radius:50%;background:var(--cream);color:var(--ink);display:flex;align-items:center;justify-content:center;font-family:var(--serif);font-size:1.1rem;box-shadow:0 4px 12px rgba(0,0,0,.18)}
+.how-step h3{font-size:1.1rem;margin-bottom:8px}
+.how-step p{color:var(--ink-soft);font-size:.92rem;margin:0}
+.how-step p code{font-family:ui-monospace,Menlo,monospace;font-size:.82rem;background:var(--cream2);padding:2px 6px;border-radius:4px}
+
+/* ---------- feature trio with photos ---------- */
+.trio-grid{display:grid;grid-template-columns:repeat(3,1fr);gap:28px;max-width:1040px;margin:0 auto}
+@media(max-width:860px){.trio-grid{grid-template-columns:1fr;max-width:420px}}
+.trio-card{background:#fff;border:1px solid var(--line);border-radius:12px;overflow:hidden;display:flex;flex-direction:column}
+.trio-card .tc-photo{aspect-ratio:16/10;overflow:hidden}
+.trio-card .tc-photo img{width:100%;height:100%;object-fit:cover;transition:transform .5s ease}
+.trio-card:hover .tc-photo img{transform:scale(1.04)}
+.trio-card .tc-body{padding:26px 26px 28px}
+.trio-card h3{font-size:1.18rem;margin-bottom:10px}
+.trio-card p{color:var(--ink-soft);font-size:.92rem;margin:0 0 12px}
+.trio-card ul{list-style:none;margin:0;padding:0;font-size:.86rem;color:var(--ink-soft)}
+.trio-card li{padding:6px 0;border-bottom:1px dashed var(--line);display:flex;gap:9px;align-items:flex-start}
+.trio-card li:last-child{border-bottom:none}
+.trio-card li:before{content:"✓";color:var(--good);font-weight:700;flex-shrink:0}
+.tc-new{display:inline-block;background:var(--accent);color:#fff;font-size:.6rem;letter-spacing:.08em;text-transform:uppercase;padding:2px 8px;border-radius:10px;font-weight:700;margin-left:6px;vertical-align:2px}
+
+/* ---------- interactive demo ---------- */
+.demo-wrap{max-width:960px;margin:0 auto;text-align:center}
+.demo-frame{position:relative;border-radius:18px;background:#211d1a;padding:14px;box-shadow:0 30px 70px rgba(33,29,26,.25)}
+.demo-frame .df-bar{display:flex;align-items:center;gap:6px;padding:2px 6px 12px}
+.demo-frame .df-bar i{width:9px;height:9px;border-radius:50%;background:rgba(255,255,255,.22);display:block}
+.demo-frame .df-url{margin-left:8px;flex:1;text-align:left;background:rgba(255,255,255,.1);color:rgba(255,255,255,.65);border-radius:6px;padding:4px 12px;font-size:.72rem;font-family:ui-monospace,Menlo,monospace;overflow:hidden;text-overflow:ellipsis;white-space:nowrap}
+.demo-frame iframe{width:100%;height:540px;border:none;border-radius:8px;background:#151312;display:block}
+@media(max-width:640px){.demo-frame iframe{height:420px}}
+.demo-cover{position:absolute;inset:14px;top:44px;border-radius:8px;background:linear-gradient(160deg,#1d1a18,#2a2320);display:flex;flex-direction:column;align-items:center;justify-content:center;gap:16px;color:#f3ede6}
+.demo-cover p{margin:0;font-size:.95rem;color:rgba(243,237,230,.75);max-width:340px;padding:0 20px}
+.demo-cover .btn{background:#c58a5a;color:#fff}
+.demo-links{margin-top:22px;font-size:.9rem}
+.demo-links a{color:var(--accent-dark);font-weight:700}
+.demo-links a:hover{text-decoration:underline}
+
+/* ---------- pricing extras ---------- */
+.ea-banner{max-width:760px;margin:0 auto 46px;background:var(--ink);color:#fff;border-radius:12px;padding:18px 26px;text-align:center;font-size:.95rem;line-height:1.6}
+.ea-banner strong{color:#e7c992}
+.billing-box{max-width:680px;margin:40px auto 0;padding:20px 24px;border:1px solid var(--line);border-radius:10px;background:#fff;text-align:left}
+.billing-box .bb-head{font-size:.8rem;font-weight:600;letter-spacing:.08em;text-transform:uppercase;color:var(--accent);margin-bottom:8px}
+.billing-box ul{margin:0;padding-left:18px;font-size:.9rem;color:var(--ink-soft);line-height:1.8}
+.billing-box strong{color:var(--ink)}
+
+/* ---------- founder note ---------- */
+.founder{max-width:660px;margin:0 auto;text-align:center}
+.founder p{font-size:1.08rem;color:var(--ink-soft);margin-bottom:20px;line-height:1.75}
+.founder .sig{font-family:var(--serif);font-style:italic;font-size:1.25rem;color:var(--ink);margin-top:28px}
+.founder .sig small{display:block;font-family:var(--sans);font-style:normal;font-size:.8rem;color:var(--ink-soft);margin-top:6px;letter-spacing:.06em;text-transform:uppercase}
+
+/* ---------- FAQ accordion ---------- */
+.faq{max-width:720px;margin:0 auto}
+.faq details{background:#fff;border:1px solid var(--line);border-radius:10px;margin-bottom:12px;overflow:hidden}
+.faq summary{cursor:pointer;list-style:none;padding:19px 22px;font-weight:600;font-size:.98rem;display:flex;justify-content:space-between;align-items:center;gap:14px}
+.faq summary::-webkit-details-marker{display:none}
+.faq summary:after{content:"+";font-family:var(--serif);font-size:1.3rem;color:var(--accent);flex-shrink:0;transition:transform .2s}
+.faq details[open] summary:after{transform:rotate(45deg)}
+.faq details p{margin:0;padding:0 22px 20px;color:var(--ink-soft);font-size:.92rem;line-height:1.7}
+
+/* ---------- final CTA ---------- */
+.cta-v2{background:var(--ink);color:#fff;text-align:center;padding:86px 0}
+.cta-v2 h2{color:#fff;font-size:2.1rem;margin-bottom:14px}
+.cta-v2 p{color:rgba(255,255,255,.72);margin:0 0 30px}
+.cta-v2 .hero-form{margin:0 auto;justify-content:center}
+.cta-v2 .hero-form input{border-color:transparent}
+.cta-v2 .hero-note-v2{color:rgba(255,255,255,.6)}
+.cta-v2 .hero-note-v2 strong{color:#9fd4b2}
+
+/* ---------- footer V2 ---------- */
+footer.foot-v2{background:#fff;border-top:1px solid var(--line);padding:56px 24px 36px;font-size:.88rem;color:var(--ink-soft);text-align:left}
+.foot-cols{max-width:1120px;margin:0 auto 36px;display:grid;grid-template-columns:1.4fr 1fr 1fr 1fr;gap:34px}
+@media(max-width:760px){.foot-cols{grid-template-columns:1fr 1fr}}
+.foot-cols .fc-brand{font-family:var(--serif);font-size:1.2rem;color:var(--ink);display:flex;align-items:center;gap:9px;margin-bottom:10px}
+.foot-cols .fc-brand img{height:36px;width:auto}
+.foot-cols .fc-brand span{color:var(--accent)}
+.foot-cols h4{font-family:var(--sans);font-size:.74rem;letter-spacing:.12em;text-transform:uppercase;color:var(--ink);margin-bottom:14px}
+.foot-cols ul{list-style:none;margin:0;padding:0}
+.foot-cols li{margin-bottom:9px}
+.foot-cols a:hover{color:var(--ink);text-decoration:underline}
+.foot-contact-note{font-size:.78rem;color:var(--ink-soft);margin-top:6px;line-height:1.55}
+.foot-base{max-width:1120px;margin:0 auto;padding-top:22px;border-top:1px solid var(--line);display:flex;justify-content:space-between;gap:14px;flex-wrap:wrap;font-size:.82rem}
+
+/* section rhythm tweaks */
+.section.tight{padding:84px 0}
+.alt-bg{background:var(--cream2)}
+</style>
 </head>
 <body>
 
@@ -18,249 +190,449 @@
     <a href="#top" class="brand"><img src="logo-sv.png" alt="Salon Vine logo" class="brand-logo">Salon <span>Vine</span></a>
     <ul class="nav-links">
       <li><a href="#features">Features</a></li>
-      <li><a href="#compare">Compare</a></li>
-      <li><a href="#pricing">Pricing</a></li>
       <li><a href="#how">How it works</a></li>
+      <li><a href="#pricing">Pricing</a></li>
+      <li><a href="#showcase">Demo sites</a></li>
     </ul>
     <div class="nav-cta">
-      <a href="login.html" class="btn btn-outline" style="padding:11px 20px">Log In</a>
-      <a href="signup.html" class="btn btn-primary" style="padding:11px 20px">Start Free</a>
+      <a href="login.html" class="btn btn-outline" style="padding:11px 20px">Log in</a>
+      <a href="/signup" class="btn btn-primary" style="padding:11px 20px" id="navSignup">Build my site free</a>
     </div>
   </nav>
 </header>
 
-<section class="hero" id="top">
+<!-- ================= HERO: the product IS the entry ================= -->
+<section class="hero-v2" id="top">
   <div class="container">
-    <span class="eyebrow">Built for independent salons</span>
-    <h1>The booking site and back office your salon actually deserves — <em>and it looks like yours.</em></h1>
-    <p class="sub">Salon Vine gives you a client booking site, a staff portal, and payments — with the one thing the big platforms won't let you have: an app icon with your salon's name on it, sitting right on your client's home screen.</p>
-    <div class="hero-ctas">
-      <a href="signup.html" class="btn btn-primary">Start your salon — free for 30 days</a>
-      <a href="#pricing" class="btn btn-outline">See pricing</a>
+    <div>
+      <span class="eyebrow">Websites for independent salons</span>
+      <h1>Your salon's website, <em>live in 60 seconds.</em></h1>
+      <p class="sub">Get found by new clients, take booking requests right from your chair, and look as good online as your work does in person.</p>
+      <form class="hero-form" id="heroForm" action="/signup" method="get">
+        <input type="text" name="salon" id="heroSalon" placeholder="Your salon's name" aria-label="Your salon's name" maxlength="80" autocomplete="organization">
+        <button type="submit" class="btn btn-primary">Build my site — free</button>
+      </form>
+      <p class="hero-note-v2"><strong>Free during early access.</strong> No credit card required.</p>
     </div>
-    <p class="hero-note">No setup fees. No contracts. Cancel anytime.</p>
-  </div>
-</section>
-
-<div class="trust-strip">
-  <div class="container">
-    <span>Client booking site</span>
-    <span>Staff &amp; payroll portal</span>
-    <span>Card payments</span>
-    <span>Waitlist &amp; forms</span>
-    <span>Your brand, your icon</span>
-  </div>
-</div>
-
-<section class="section" id="features">
-  <div class="container">
-    <span class="section-label">Everything included</span>
-    <h2>One subscription. Your whole business.</h2>
-    <p class="section-sub">No add-ons to hunt down, no per-seat surprises buried in the fine print. Every plan includes the full platform.</p>
-
-    <div class="feature-grid">
-      <div class="feature-card reveal">
-        <span class="badge">Exclusive</span>
-        <svg fill="none" stroke="currentColor" stroke-width="1.6" viewBox="0 0 24 24"><rect x="6" y="2" width="12" height="20" rx="2"/><line x1="10" y1="19" x2="14" y2="19"/></svg>
-        <h3>Your icon, on their home screen</h3>
-        <p>Upload your own logo as the app icon. When a client adds your site to their phone, it looks and feels like your salon built its own app — because it did.</p>
+    <div class="hero-visual">
+      <div class="hero-photo">
+        <img src="https://images.unsplash.com/photo-1562322140-8baeececf3df?w=1800&q=80&auto=format&fit=crop" alt="Stylist finishing a blow-dry for a smiling client" width="1800" height="1200" fetchpriority="high">
       </div>
-      <div class="feature-card reveal">
-        <svg fill="none" stroke="currentColor" stroke-width="1.6" viewBox="0 0 24 24"><rect x="3" y="4" width="18" height="18" rx="2"/><line x1="3" y1="10" x2="21" y2="10"/><line x1="8" y1="2" x2="8" y2="6"/><line x1="16" y1="2" x2="16" y2="6"/></svg>
-        <h3>Online booking, built to convert</h3>
-        <p>A fast, mobile-first booking flow with live availability, service menus, and stylist selection — no app download required for clients.</p>
-      </div>
-      <div class="feature-card reveal">
-        <svg fill="none" stroke="currentColor" stroke-width="1.6" viewBox="0 0 24 24"><path d="M17 21v-2a4 4 0 0 0-4-4H5a4 4 0 0 0-4 4v2"/><circle cx="9" cy="7" r="4"/><path d="M23 21v-2a4 4 0 0 0-3-3.87"/><path d="M16 3.13a4 4 0 0 1 0 7.75"/></svg>
-        <h3>A real staff portal</h3>
-        <p>Every stylist gets their own login: their schedule, their clients, their profile. Owners see it all — bookings, walk-ins, waitlist, and documents in one place.</p>
-      </div>
-      <div class="feature-card reveal">
-        <svg fill="none" stroke="currentColor" stroke-width="1.6" viewBox="0 0 24 24"><rect x="1" y="4" width="22" height="16" rx="2"/><line x1="1" y1="10" x2="23" y2="10"/></svg>
-        <h3>Payments built in</h3>
-        <p>Take deposits and card payments right from the portal. You set the surcharge, you keep the transparency — no hidden processing markups.</p>
-      </div>
-      <div class="feature-card reveal">
-        <svg fill="none" stroke="currentColor" stroke-width="1.6" viewBox="0 0 24 24"><path d="M12 22s8-4.5 8-11V5l-8-3-8 3v6c0 6.5 8 11 8 11z"/></svg>
-        <h3>Your data, isolated and yours</h3>
-        <p>Every salon on Salon Vine runs on its own fully separate site. Your client list, your bookings, your business — never pooled with anyone else's.</p>
-      </div>
-      <div class="feature-card reveal">
-        <span class="badge">Coming soon</span>
-        <svg fill="none" stroke="currentColor" stroke-width="1.6" viewBox="0 0 24 24"><path d="M21 12a9 9 0 1 1-3-6.7"/><polyline points="21 3 21 9 15 9"/></svg>
-        <h3>Switch over in minutes, not weeks</h3>
-        <p>Give us the link to your current site and we'll pre-fill your services, team, and hours automatically — you just review and go live.</p>
+      <!-- pure HTML/CSS phone mockup: a miniature Midnight-theme salon site -->
+      <div class="phone" aria-hidden="true">
+        <div class="ph-notch"></div>
+        <div class="ph-screen">
+          <div class="mini-nav"><span class="mn-brand">The Gilded <em>Root</em></span><span class="mn-btn">Book now</span></div>
+          <div class="mini-hero">
+            <div class="mh-eyebrow">Welcome to</div>
+            <div class="mh-name">The Gilded Root</div>
+            <div class="mh-rule"></div>
+            <div class="mh-tag">Color, balayage &amp; care</div>
+            <span class="mh-cta">Request an appointment</span>
+          </div>
+          <div class="mini-gallery"><span></span><span></span><span></span></div>
+          <div class="mini-svc">
+            <div class="ms-head">The menu</div>
+            <div class="ms-row"><span>Balayage</span><b>$180</b></div>
+            <div class="ms-row"><span>Haircut</span><b>$55</b></div>
+            <div class="ms-row"><span>Blowout</span><b>$45</b></div>
+          </div>
+        </div>
       </div>
     </div>
   </div>
 </section>
 
-<section class="section" id="compare" style="background:var(--cream2)">
+<!-- ================= PROOF: Made with SalonVine (honest only) ================= -->
+<section class="section tight alt-bg" id="showcase">
   <div class="container">
-    <span class="section-label">Why Salon Vine</span>
-    <h2>Built to be simpler and more affordable</h2>
-    <p class="section-sub">We ran a salon on a different booking platform for years. It worked, but it cost more than it should have and never felt like ours. So we built the one we wished we had.</p>
+    <span class="section-label">Made with Salon Vine</span>
+    <h2>Real sites, really live</h2>
+    <p class="section-sub">No stock storefronts here — every one of these is a working Salon Vine site you can open right now.</p>
 
-    <div class="compare">
-      <table>
-        <tr><th>&nbsp;</th><th class="studio-col">Salon Vine</th></tr>
-        <tr><td>Starting price</td><td class="studio-col yes">$19/mo</td></tr>
-        <tr><td>Personalized app icon</td><td class="studio-col yes">✓ Included on every plan</td></tr>
-        <tr><td>Plan structure</td><td class="studio-col yes">3 plans, no forced add-ons</td></tr>
-        <tr><td>Setup fees</td><td class="studio-col yes">$0</td></tr>
-        <tr><td>Contract required</td><td class="studio-col yes">No</td></tr>
-        <tr><td>Import from your old site</td><td class="studio-col yes">Automatic (beta)</td></tr>
-        <tr><td>Client booking site</td><td class="studio-col yes">✓</td></tr>
-        <tr><td>Staff portal</td><td class="studio-col yes">✓</td></tr>
-      </table>
+    <div class="showcase-grid">
+      <div class="show-card reveal">
+        <div class="show-mini" style="background:#faf6f0;color:#211d1a">
+          <div class="sm-bar" style="background:#f2ece2"><i></i><i></i><i></i></div>
+          <div class="sm-body">
+            <div class="sm-name">Studio 17</div>
+            <div class="sm-tag" style="color:#5c5148">Hair studio</div>
+            <span class="sm-cta" style="background:#a8836a;color:#fff">Book now</span>
+            <div class="sm-shots"><i style="background:linear-gradient(135deg,#d9c3ad,#a8836a)"></i><i style="background:linear-gradient(135deg,#e8dccb,#bfa084)"></i><i style="background:linear-gradient(135deg,#cbb49b,#8a6852)"></i></div>
+          </div>
+        </div>
+        <div class="show-meta">
+          <div><span class="sw-name">Studio 17</span><span class="sw-kind real">Real customer</span></div>
+          <a href="https://studio17-salon.netlify.app" target="_blank" rel="noopener">Visit site &nearr;</a>
+        </div>
+      </div>
+
+      <div class="show-card reveal">
+        <div class="show-mini" style="background:#151312;color:#f3ede6">
+          <div class="sm-bar" style="background:#1d1a18;border-color:rgba(255,255,255,.08)"><i></i><i></i><i></i></div>
+          <div class="sm-body">
+            <div class="sm-name">Iron &amp; Oak</div>
+            <div class="sm-tag" style="color:#b3a89e">Barbershop</div>
+            <span class="sm-cta" style="background:#c58a5a;color:#fff">Book now</span>
+            <div class="sm-shots"><i style="background:linear-gradient(135deg,#3a322c,#6b5a48)"></i><i style="background:linear-gradient(135deg,#4a3d33,#8a6f56)"></i><i style="background:linear-gradient(135deg,#2c2622,#5d4d3d)"></i></div>
+          </div>
+        </div>
+        <div class="show-meta">
+          <div><span class="sw-name">Iron &amp; Oak Barber</span><span class="sw-kind">Demo site</span></div>
+          <a href="https://demo-iron-oak-barber.netlify.app" target="_blank" rel="noopener">Visit site &nearr;</a>
+        </div>
+      </div>
+
+      <div class="show-card reveal">
+        <div class="show-mini" style="background:#12151f;color:#edeff7">
+          <div class="sm-bar" style="background:#181c2a;border-color:rgba(255,255,255,.08)"><i></i><i></i><i></i></div>
+          <div class="sm-body">
+            <div class="sm-name">The Gilded Root</div>
+            <div class="sm-tag" style="color:#a9afc4">Color &amp; balayage</div>
+            <span class="sm-cta" style="background:#c9a86a;color:#12151f">Book now</span>
+            <div class="sm-shots"><i style="background:linear-gradient(135deg,#3a3348,#6b5a6e)"></i><i style="background:linear-gradient(135deg,#54423c,#8a6f56)"></i><i style="background:linear-gradient(135deg,#2c3242,#5d6b85)"></i></div>
+          </div>
+        </div>
+        <div class="show-meta">
+          <div><span class="sw-name">The Gilded Root</span><span class="sw-kind">Demo site</span></div>
+          <a href="https://salonvine.com/s/the-gilded-root" target="_blank" rel="noopener">Visit site &nearr;</a>
+        </div>
+      </div>
     </div>
-    <p class="pricing-fineprint">Pricing shown is current as of 2026 and subject to change.</p>
+
+    <div class="show-stat reveal">
+      <span class="stat-chip"><b>Under 2 minutes</b><span>average setup, name to live site</span></span>
+    </div>
   </div>
 </section>
 
-<section class="section" id="pricing">
+<!-- ================= HOW IT WORKS ================= -->
+<section class="section" id="how">
+  <div class="container">
+    <span class="section-label">How it works</span>
+    <h2>Three steps. No tech skills.</h2>
+    <p class="section-sub">The whole thing happens in one short wizard — most owners finish before their coffee cools.</p>
+
+    <div class="how-grid">
+      <div class="how-step reveal">
+        <div class="hs-photo">
+          <img src="https://images.unsplash.com/photo-1595475884562-073c30d45670?w=800&q=80&auto=format&fit=crop" alt="Stylist's hands holding shears and a comb" loading="lazy">
+          <span class="hs-num">1</span>
+        </div>
+        <h3>Tell us your salon's name</h3>
+        <p>Type it in the box above — that's genuinely the whole first step.</p>
+      </div>
+      <div class="how-step reveal">
+        <div class="hs-photo">
+          <img src="https://images.unsplash.com/photo-1580618672591-eb180b1a973f?w=800&q=80&auto=format&fit=crop" alt="Stylist blow-drying a client's hair in the salon" loading="lazy">
+          <span class="hs-num">2</span>
+        </div>
+        <h3>Pick your look</h3>
+        <p>Six designer themes, your accent color, your photos, your services and prices.</p>
+      </div>
+      <div class="how-step reveal">
+        <div class="hs-photo">
+          <img src="https://images.unsplash.com/photo-1560869713-7d0a29430803?w=800&q=80&auto=format&fit=crop" alt="Stylist curling a client's hair" loading="lazy">
+          <span class="hs-num">3</span>
+        </div>
+        <h3>Share your link</h3>
+        <p>You're live instantly at <code>salonvine.com/s/your-salon</code> — perfect for your Instagram bio.</p>
+      </div>
+    </div>
+  </div>
+</section>
+
+<!-- ================= FEATURE TRIO ================= -->
+<section class="section alt-bg" id="features">
+  <div class="container">
+    <span class="section-label">What you get</span>
+    <h2>Everything a salon site needs. Nothing it doesn't.</h2>
+    <p class="section-sub">Every feature below is live today — no "coming soon" fine print required.</p>
+
+    <div class="trio-grid">
+      <div class="trio-card reveal">
+        <div class="tc-photo"><img src="https://images.unsplash.com/photo-1633681926022-84c23e8cb2d6?w=800&q=80&auto=format&fit=crop" alt="Modern salon interior with styling chairs and mirrors" loading="lazy"></div>
+        <div class="tc-body">
+          <h3>Get found</h3>
+          <p>A real website of your own, at a link clients actually remember.</p>
+          <ul>
+            <li>Your own page at salonvine.com/s/your-salon</li>
+            <li>Made for the "link in bio" spot on Instagram</li>
+            <li>Loads fast, looks right on every phone</li>
+          </ul>
+        </div>
+      </div>
+      <div class="trio-card reveal">
+        <div class="tc-photo"><img src="https://images.unsplash.com/photo-1605497788044-5a32c7078486?w=800&q=80&auto=format&fit=crop" alt="Barber working with a client in the chair" loading="lazy"></div>
+        <div class="tc-body">
+          <h3>Get booked</h3>
+          <p>Clients send a booking request; you confirm the time. You stay in control of your book.</p>
+          <ul>
+            <li>Booking-request form on every site</li>
+            <li>Requests land in your email instantly</li>
+            <li>Reply directly to the client to confirm</li>
+          </ul>
+        </div>
+      </div>
+      <div class="trio-card reveal">
+        <div class="tc-photo"><img src="https://images.unsplash.com/photo-1554519934-e32b1629d9ee?w=800&q=80&auto=format&fit=crop" alt="Finished balayage color result on long hair" loading="lazy"></div>
+        <div class="tc-body">
+          <h3>Look professional</h3>
+          <p>Designed by people who obsess over type and spacing, so you don't have to.</p>
+          <ul>
+            <li>Six themes, light &amp; dark, your accent color</li>
+            <li>Photo gallery of your best work</li>
+            <li>Services &amp; prices menu<span class="tc-new">New</span></li>
+          </ul>
+        </div>
+      </div>
+    </div>
+  </div>
+</section>
+
+<!-- ================= INTERACTIVE DEMO ================= -->
+<section class="section" id="demo">
+  <div class="container demo-wrap">
+    <span class="section-label">Try before you type</span>
+    <h2>Poke around a live demo</h2>
+    <p class="section-sub">This is Iron &amp; Oak, a demo barbershop running on Salon Vine — the exact thing you'd get, browsable right here.</p>
+
+    <div class="demo-frame reveal">
+      <div class="df-bar"><i></i><i></i><i></i><span class="df-url">demo-iron-oak-barber.netlify.app</span></div>
+      <iframe id="demoFrame" data-src="https://demo-iron-oak-barber.netlify.app" title="Iron & Oak Barber — live Salon Vine demo site" loading="lazy"></iframe>
+      <div class="demo-cover" id="demoCover">
+        <p>The demo loads on demand so this page stays fast.</p>
+        <button type="button" class="btn" id="demoLoadBtn">Load the interactive demo</button>
+      </div>
+    </div>
+    <p class="demo-links">Prefer a whole tab? <a href="https://demo-iron-oak-barber.netlify.app" target="_blank" rel="noopener">Open the full demo &nearr;</a></p>
+  </div>
+</section>
+
+<!-- ================= PRICING ================= -->
+<section class="section alt-bg" id="pricing">
   <div class="container">
     <span class="section-label">Simple pricing</span>
     <h2>Three plans. No surprises.</h2>
-    <p class="section-sub">Every plan includes the client site, staff portal, payments, and your custom app icon. Pay monthly or save with annual billing.</p>
+    <p class="section-sub">Pick the plan that fits where your salon's headed — they're all free right now.</p>
 
-    <div class="pricing-toggle">
-      <button class="active" id="btnMonthly" onclick="setBilling('monthly')">Monthly</button>
-      <button id="btnAnnual" onclick="setBilling('annual')">Annual — save 15%</button>
-    </div>
+    <div class="ea-banner reveal"><strong>Early access:</strong> every plan is free right now — founding salons lock in launch pricing when billing starts.</div>
 
     <div class="plans">
       <div class="plan reveal">
         <h3>Studio</h3>
-        <div class="price" id="priceStudio">$19<span>/mo</span></div>
-        <div class="price-note" id="noteStudio">Billed monthly</div>
+        <div class="price">$19<span>/mo</span></div>
+        <div class="price-note">Free during early access</div>
         <ul>
-          <li><svg fill="none" stroke="currentColor" stroke-width="2" viewBox="0 0 24 24"><polyline points="20 6 9 17 4 12"/></svg>Client booking site</li>
-          <li><svg fill="none" stroke="currentColor" stroke-width="2" viewBox="0 0 24 24"><polyline points="20 6 9 17 4 12"/></svg>Up to 3 team members</li>
-          <li><svg fill="none" stroke="currentColor" stroke-width="2" viewBox="0 0 24 24"><polyline points="20 6 9 17 4 12"/></svg>Staff portal &amp; scheduling</li>
-          <li><svg fill="none" stroke="currentColor" stroke-width="2" viewBox="0 0 24 24"><polyline points="20 6 9 17 4 12"/></svg>Card payments</li>
-          <li><svg fill="none" stroke="currentColor" stroke-width="2" viewBox="0 0 24 24"><polyline points="20 6 9 17 4 12"/></svg>Personalized app icon</li>
-          <li><svg fill="none" stroke="currentColor" stroke-width="2" viewBox="0 0 24 24"><polyline points="20 6 9 17 4 12"/></svg>Waitlist &amp; intake forms</li>
+          <li><svg fill="none" stroke="currentColor" stroke-width="2" viewBox="0 0 24 24"><polyline points="20 6 9 17 4 12"/></svg>Your salon site at salonvine.com/s/</li>
+          <li><svg fill="none" stroke="currentColor" stroke-width="2" viewBox="0 0 24 24"><polyline points="20 6 9 17 4 12"/></svg>Photo gallery of your work</li>
+          <li><svg fill="none" stroke="currentColor" stroke-width="2" viewBox="0 0 24 24"><polyline points="20 6 9 17 4 12"/></svg>Booking-request form with email alerts</li>
+          <li><svg fill="none" stroke="currentColor" stroke-width="2" viewBox="0 0 24 24"><polyline points="20 6 9 17 4 12"/></svg>Six themes + your accent color</li>
         </ul>
-        <a href="signup.html?plan=studio" class="btn btn-outline">Start free for 30 days</a>
+        <a href="/signup?plan=studio" class="btn btn-outline">Start free</a>
       </div>
       <div class="plan featured reveal">
         <div class="most-popular">Most popular</div>
         <h3>Studio Pro</h3>
-        <div class="price" id="priceStudioPro">$39<span>/mo</span></div>
-        <div class="price-note" id="noteStudioPro">Billed monthly</div>
+        <div class="price">$39<span>/mo</span></div>
+        <div class="price-note">Free during early access</div>
         <ul>
           <li><svg fill="none" stroke="currentColor" stroke-width="2" viewBox="0 0 24 24"><polyline points="20 6 9 17 4 12"/></svg>Everything in Studio</li>
-          <li><svg fill="none" stroke="currentColor" stroke-width="2" viewBox="0 0 24 24"><polyline points="20 6 9 17 4 12"/></svg>3–10 team members</li>
-          <li><svg fill="none" stroke="currentColor" stroke-width="2" viewBox="0 0 24 24"><polyline points="20 6 9 17 4 12"/></svg>Multiple locations</li>
-          <li><svg fill="none" stroke="currentColor" stroke-width="2" viewBox="0 0 24 24"><polyline points="20 6 9 17 4 12"/></svg>Reports &amp; payroll exports</li>
+          <li><svg fill="none" stroke="currentColor" stroke-width="2" viewBox="0 0 24 24"><polyline points="20 6 9 17 4 12"/></svg>Services &amp; prices menu</li>
+          <li><svg fill="none" stroke="currentColor" stroke-width="2" viewBox="0 0 24 24"><polyline points="20 6 9 17 4 12"/></svg>Instagram + hours on your site</li>
           <li><svg fill="none" stroke="currentColor" stroke-width="2" viewBox="0 0 24 24"><polyline points="20 6 9 17 4 12"/></svg>Priority support</li>
-          <li><svg fill="none" stroke="currentColor" stroke-width="2" viewBox="0 0 24 24"><polyline points="20 6 9 17 4 12"/></svg>Site import assistant (beta)</li>
         </ul>
-        <a href="signup.html?plan=pro" class="btn btn-accent">Start free for 30 days</a>
+        <a href="/signup?plan=pro" class="btn btn-accent">Start free</a>
       </div>
       <div class="plan reveal">
         <h3>Studio Elite</h3>
-        <div class="price" id="priceStudioElite">$59<span>/mo</span></div>
-        <div class="price-note" id="noteStudioElite">Billed monthly</div>
+        <div class="price">$59<span>/mo</span></div>
+        <div class="price-note">Free during early access</div>
         <ul>
           <li><svg fill="none" stroke="currentColor" stroke-width="2" viewBox="0 0 24 24"><polyline points="20 6 9 17 4 12"/></svg>Everything in Studio Pro</li>
-          <li><svg fill="none" stroke="currentColor" stroke-width="2" viewBox="0 0 24 24"><polyline points="20 6 9 17 4 12"/></svg>Unlimited team members</li>
-          <li><svg fill="none" stroke="currentColor" stroke-width="2" viewBox="0 0 24 24"><polyline points="20 6 9 17 4 12"/></svg>Client marketing campaigns</li>
-          <li><svg fill="none" stroke="currentColor" stroke-width="2" viewBox="0 0 24 24"><polyline points="20 6 9 17 4 12"/></svg>Custom domain set up for you</li>
-          <li><svg fill="none" stroke="currentColor" stroke-width="2" viewBox="0 0 24 24"><polyline points="20 6 9 17 4 12"/></svg>Dedicated onboarding call</li>
-          <li><svg fill="none" stroke="currentColor" stroke-width="2" viewBox="0 0 24 24"><polyline points="20 6 9 17 4 12"/></svg>Early access to new features</li>
+          <li><svg fill="none" stroke="currentColor" stroke-width="2" viewBox="0 0 24 24"><polyline points="20 6 9 17 4 12"/></svg>First in line for new features</li>
+          <li><svg fill="none" stroke="currentColor" stroke-width="2" viewBox="0 0 24 24"><polyline points="20 6 9 17 4 12"/></svg>Full booking calendar when it launches</li>
+          <li><svg fill="none" stroke="currentColor" stroke-width="2" viewBox="0 0 24 24"><polyline points="20 6 9 17 4 12"/></svg>Hands-on help moving from your old site</li>
         </ul>
-        <a href="signup.html?plan=elite" class="btn btn-outline">Start free for 30 days</a>
+        <a href="/signup?plan=elite" class="btn btn-outline">Start free</a>
       </div>
     </div>
-    <p class="pricing-fineprint">Every plan starts with a 30-day free trial. We take your card at signup but charge nothing until the trial ends — after that your plan renews automatically at the monthly rate above until you cancel. Cancel anytime, no fees.</p>
-    <p class="pricing-fineprint">Plus simple, transparent card processing on payments taken through your site — no hidden markups. Final processing rate confirmed at signup.</p>
-  </div>
-</section>
 
-<section class="section" id="how" style="background:var(--cream2)">
-  <div class="container">
-    <span class="section-label">How it works</span>
-    <h2>Live in an afternoon</h2>
-    <div class="steps-grid">
-      <div class="step reveal">
-        <div class="num">1</div>
-        <h3>Sign up</h3>
-        <p>Pick a plan, tell us your salon name — your own Salon Vine site is provisioned automatically, just for you.</p>
-      </div>
-      <div class="step reveal">
-        <div class="num">2</div>
-        <h3>Make it yours</h3>
-        <p>Add your services, hours, team, and photos. Upload your logo as your app icon. Choose your colors.</p>
-      </div>
-      <div class="step reveal">
-        <div class="num">3</div>
-        <h3>Invite your team</h3>
-        <p>Send each stylist an invite — they get their own portal login on day one, no extra setup from you.</p>
-      </div>
-      <div class="step reveal">
-        <div class="num">4</div>
-        <h3>Go live</h3>
-        <p>Share your booking link, or point your existing domain at it. Clients start booking immediately.</p>
-      </div>
+    <div class="billing-box reveal">
+      <div class="bb-head">How billing works</div>
+      <ul>
+        <li><strong>$0 today — no card needed.</strong> Everything is free during early access.</li>
+        <li>The prices above are what your plan will cost once billing launches.</li>
+        <li>We'll email you well before anything is ever charged, and you can cancel anytime — no fees, no contract.</li>
+      </ul>
     </div>
   </div>
 </section>
 
-<section class="section">
-  <div class="container story">
-    <span class="section-label">Why we built this</span>
-    <h2 style="margin-bottom:26px">We ran a salon on someone else's platform first.</h2>
-    <p>It handled the booking fine — but it cost more every year, and every client's home screen looked like the software's brand, never ours. So we built the platform we actually wanted: the same convenience, at a fairer price, with our name on it instead of someone else's.</p>
-    <p>Salon Vine started as one salon's real booking site. Now it's built for any independent salon that wants the same thing — a professional platform that still feels entirely, unmistakably theirs.</p>
+<!-- ================= FOUNDER NOTE ================= -->
+<section class="section" id="about">
+  <div class="container founder reveal">
+    <span class="section-label">A note from us</span>
+    <h2 style="margin-bottom:26px">Why we're doing this</h2>
+    <p>We're two founders who watched great stylists lose clients to salons with worse hands and better websites. The big platforms charge salon money for software that never feels like yours — so we're building the opposite: a site with your name on it, live in a minute, honest about what it does.</p>
+    <p>Salon Vine is young, and we're not pretending otherwise. That's exactly why early access is free: our founding salons shape what we build next, and they'll get us personally — every email lands in our own inboxes.</p>
+    <div class="sig">Zack &amp; Dylan<small>Founders, Salon Vine</small></div>
   </div>
 </section>
 
-<section class="cta-band">
+<!-- ================= FAQ ================= -->
+<section class="section alt-bg" id="faq">
   <div class="container">
-    <h2>Ready to make it yours?</h2>
-    <p>Start free for 30 days. No credit card surprises, no setup fees, cancel anytime.</p>
-    <a href="signup.html" class="btn btn-primary">Start your salon</a>
+    <span class="section-label">Questions</span>
+    <h2>Fair questions, straight answers</h2>
+    <p class="section-sub">If yours isn't here, start a site and reply to the welcome email — we answer those personally.</p>
+
+    <div class="faq" id="faqList">
+      <details class="reveal">
+        <summary>Is it really free?</summary>
+        <p>Yes — every plan is $0 during early access, and we don't even ask for a card. The listed prices are what plans will cost once billing launches; founding salons lock in that launch pricing. We'll email you well before anything is ever charged, and you can cancel anytime with no fees and no contract.</p>
+      </details>
+      <details class="reveal">
+        <summary>Do I need tech skills?</summary>
+        <p>If you can fill out four short steps on your phone, you're qualified. Type your salon's name, tap a theme, add photos and services if you have them handy, done. There's nothing to install, host, or update — ever.</p>
+      </details>
+      <details class="reveal">
+        <summary>How fast is my site live?</summary>
+        <p>The moment you finish the wizard your site is on the web at salonvine.com/s/your-salon. Across the salons built so far, average setup time is under 2 minutes — most of that is picking your favorite photos.</p>
+      </details>
+      <details class="reveal">
+        <summary>Can clients book online?</summary>
+        <p>Clients send a <strong>booking request</strong> through your site — their name, contact info, and what they want — and it lands in your email instantly. You reply to confirm the time, so you keep full control of your book. It's not a real-time calendar yet; a full booking calendar is on our roadmap for the Elite plan, and we won't advertise it until it ships.</p>
+      </details>
+      <details class="reveal">
+        <summary>What if I already have a website or use Booksy?</summary>
+        <p>Keep them — nothing conflicts. Your Salon Vine site works alongside anything: many salons use it as the clean "link in bio" page that shows off their work and catches booking requests, while their old tools keep doing their thing. If you decide to switch over completely, paste your current site's address into the signup and we'll help move things across.</p>
+      </details>
+    </div>
   </div>
 </section>
 
-<footer>
-  <div class="foot-links">
-    <a href="#features">Features</a>
-    <a href="#compare">Compare</a>
-    <a href="#pricing">Pricing</a>
-    <a href="login.html">Log In</a>
-    <a href="terms.html">Terms</a>
-    <a href="privacy.html">Privacy</a>
+<!-- ================= FINAL CTA ================= -->
+<section class="cta-v2">
+  <div class="container">
+    <h2>Your name here. Well — your salon's.</h2>
+    <p>Live in about a minute. Free during early access.</p>
+    <form class="hero-form" id="ctaForm" action="/signup" method="get" style="max-width:520px">
+      <input type="text" name="salon" id="ctaSalon" placeholder="Your salon's name" aria-label="Your salon's name" maxlength="80" autocomplete="organization">
+      <button type="submit" class="btn btn-primary" style="background:var(--accent)">Build my site — free</button>
+    </form>
+    <p class="hero-note-v2"><strong>Free during early access.</strong> No credit card required.</p>
   </div>
-  <p>© <span id="year"></span> Salon Vine. Built for independent salons.</p>
+</section>
+
+<!-- ================= FOOTER ================= -->
+<footer class="foot-v2">
+  <div class="foot-cols">
+    <div>
+      <div class="fc-brand"><img src="logo-sv.png" alt="Salon Vine logo">Salon <span>Vine</span></div>
+      <p style="max-width:260px;line-height:1.6">Beautiful, honest websites for independent salons — live in about a minute.</p>
+    </div>
+    <div>
+      <h4>Product</h4>
+      <ul>
+        <li><a href="#features">Features</a></li>
+        <li><a href="#pricing">Pricing</a></li>
+        <li><a href="#showcase">Demo sites</a></li>
+        <li><a href="login.html">Log in</a></li>
+      </ul>
+    </div>
+    <div>
+      <h4>Company</h4>
+      <ul>
+        <li><a href="#about">About</a></li>
+        <li><a href="/signup">Contact</a></li>
+      </ul>
+      <p class="foot-contact-note">Fastest way to reach us: start a site, or reply to any of our emails.</p>
+    </div>
+    <div>
+      <h4>Legal</h4>
+      <ul>
+        <li><a href="privacy.html">Privacy</a></li>
+        <li><a href="terms.html">Terms</a></li>
+      </ul>
+    </div>
+  </div>
+  <div class="foot-base">
+    <span>© <span id="year">2026</span> Salon Vine</span>
+    <span>No contracts. Cancel anytime.</span>
+  </div>
 </footer>
 
 <script>
-  document.getElementById('year').textContent = new Date().getFullYear();
+'use strict';
+document.getElementById('year').textContent = new Date().getFullYear();
 
-  const prices = {
-    monthly: { studio: '$19', pro: '$39', elite: '$59', note: 'Billed monthly' },
-    annual:  { studio: '$16', pro: '$33', elite: '$49', note: 'Billed annually — save 15%' }
-  };
-  function setBilling(mode){
-    document.getElementById('btnMonthly').classList.toggle('active', mode==='monthly');
-    document.getElementById('btnAnnual').classList.toggle('active', mode==='annual');
-    const p = prices[mode];
-    document.getElementById('priceStudio').innerHTML = `${p.studio}<span>/mo</span>`;
-    document.getElementById('priceStudioPro').innerHTML = `${p.pro}<span>/mo</span>`;
-    document.getElementById('priceStudioElite').innerHTML = `${p.elite}<span>/mo</span>`;
-    document.getElementById('noteStudio').textContent = p.note;
-    document.getElementById('noteStudioPro').textContent = p.note;
-    document.getElementById('noteStudioElite').textContent = p.note;
+/* ---------------- hero + final-CTA forms -> /signup?salon= ----------------
+   Plain GET forms already do this natively; the JS handler just trims the
+   value and drops the param entirely when the box is left empty. */
+function wireSalonForm(formId, inputId) {
+  var form = document.getElementById(formId);
+  var input = document.getElementById(inputId);
+  form.addEventListener('submit', function (e) {
+    e.preventDefault();
+    var v = input.value.trim().slice(0, 80);
+    window.location.href = v ? '/signup?salon=' + encodeURIComponent(v) : '/signup';
+  });
+}
+wireSalonForm('heroForm', 'heroSalon');
+wireSalonForm('ctaForm', 'ctaSalon');
+
+/* ---------------- lazy interactive demo ----------------
+   The iframe has data-src only; it loads on click, or automatically
+   when the section scrolls into view — never on first paint. */
+(function () {
+  var frame = document.getElementById('demoFrame');
+  var cover = document.getElementById('demoCover');
+  var loaded = false;
+  function loadDemo() {
+    if (loaded) { return; }
+    loaded = true;
+    frame.src = frame.getAttribute('data-src');
+    frame.addEventListener('load', function () { cover.style.display = 'none'; });
+    cover.querySelector('p').textContent = 'Loading the demo…';
+    document.getElementById('demoLoadBtn').style.display = 'none';
   }
+  document.getElementById('demoLoadBtn').addEventListener('click', loadDemo);
+  if ('IntersectionObserver' in window) {
+    var io = new IntersectionObserver(function (entries) {
+      entries.forEach(function (en) {
+        if (en.isIntersecting) { loadDemo(); io.disconnect(); }
+      });
+    }, { rootMargin: '200px' });
+    io.observe(document.getElementById('demo'));
+  }
+})();
 
-  const revealEls = document.querySelectorAll('.reveal');
-  const io = new IntersectionObserver((entries)=>{
-    entries.forEach(e=>{ if(e.isIntersecting){ e.target.classList.add('in'); io.unobserve(e.target); } });
-  }, { threshold: 0.15 });
-  revealEls.forEach(el=>io.observe(el));
+/* ---------------- FAQ accordion: opening one closes the others ---------------- */
+(function () {
+  var items = document.querySelectorAll('#faqList details');
+  items.forEach(function (d) {
+    d.addEventListener('toggle', function () {
+      if (!d.open) { return; }
+      items.forEach(function (other) { if (other !== d) { other.open = false; } });
+    });
+  });
+})();
+
+/* ---------------- scroll reveal (respects prefers-reduced-motion via CSS) ---------------- */
+(function () {
+  var els = document.querySelectorAll('.reveal');
+  if (!('IntersectionObserver' in window)) {
+    els.forEach(function (el) { el.classList.add('in'); });
+    return;
+  }
+  var io = new IntersectionObserver(function (entries) {
+    entries.forEach(function (e) {
+      if (e.isIntersecting) { e.target.classList.add('in'); io.unobserve(e.target); }
+    });
+  }, { threshold: 0.12 });
+  els.forEach(function (el) { io.observe(el); });
+})();
 </script>
 
 </body>

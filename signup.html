@@ -88,6 +88,35 @@
 .photo-hint{font-size:.78rem;color:var(--ink-soft);margin:0 0 8px}
 .skip-link{display:inline-block;font-size:.85rem;color:var(--ink-soft);text-decoration:underline;cursor:pointer;background:none;border:none;padding:12px 4px;font-family:var(--sans)}
 
+/* services quick-picker (v2) */
+.svc-picker{display:flex;flex-wrap:wrap;gap:8px;margin:0 0 12px}
+.svc-chip{display:inline-flex;align-items:center;border:1.5px solid var(--line);border-radius:20px;background:#fff;overflow:hidden;transition:border-color .2s,background .2s}
+.svc-chip.on{border-color:var(--accent);background:var(--cream2)}
+.svc-chip .svc-tog{border:none;background:none;cursor:pointer;font-family:var(--sans);font-size:.84rem;font-weight:600;color:var(--ink-soft);padding:9px 14px;display:flex;align-items:center;gap:6px}
+.svc-chip.on .svc-tog{color:var(--ink)}
+.svc-chip .svc-tog:before{content:"+";font-weight:700;color:var(--accent)}
+.svc-chip.on .svc-tog:before{content:"✓"}
+.svc-chip .svc-price{display:none;align-items:center;padding-right:6px}
+.svc-chip.on .svc-price{display:flex}
+.svc-chip .svc-price input{width:72px;border:1px solid var(--line);border-radius:14px;padding:5px 9px;font-size:.8rem;font-family:var(--sans)}
+.svc-custom{display:flex;gap:8px;align-items:center;margin:2px 0 20px;flex-wrap:wrap}
+.svc-custom input{border:1px solid var(--line);border-radius:6px;padding:10px 12px;font-family:var(--sans);font-size:.86rem}
+.svc-custom .sc-name{flex:1;min-width:150px}
+.svc-custom .sc-price{width:90px}
+.svc-custom .sc-add{border:1.5px solid var(--ink);background:#fff;border-radius:20px;padding:9px 18px;font-family:var(--sans);font-size:.8rem;font-weight:700;cursor:pointer}
+.svc-custom .sc-add:hover{background:var(--cream2)}
+.svc-note{font-size:.76rem;color:var(--ink-soft);margin:-6px 0 16px}
+.field-row{display:grid;grid-template-columns:1fr 1fr;gap:14px}
+@media(max-width:560px){.field-row{grid-template-columns:1fr}}
+
+/* success next-steps checklist (v2) */
+.next-steps{list-style:none;margin:6px auto 20px;padding:0;max-width:420px;text-align:left}
+.next-steps li{display:flex;gap:12px;align-items:flex-start;padding:11px 0;border-bottom:1px dashed var(--line);font-size:.92rem}
+.next-steps li:last-child{border-bottom:none}
+.next-steps .ns-ico{width:26px;height:26px;flex-shrink:0;border-radius:50%;background:var(--cream2);color:var(--accent-dark);display:flex;align-items:center;justify-content:center;font-size:.85rem;font-weight:700}
+.next-steps .ns-copy{margin-left:auto;border:1px solid var(--line);background:#fff;border-radius:14px;padding:4px 12px;font-size:.72rem;font-weight:700;cursor:pointer;font-family:var(--sans);white-space:nowrap}
+.next-steps .ns-copy:hover{border-color:var(--accent)}
+
 /* summary */
 .sum-table{border:1px solid var(--line);border-radius:10px;overflow:hidden;margin-bottom:22px}
 .sum-row{display:flex;justify-content:space-between;align-items:center;gap:16px;padding:13px 16px;border-bottom:1px solid var(--line);font-size:.9rem}
@@ -232,6 +261,26 @@
         <input type="text" id="tagline" maxlength="90" placeholder="e.g. Color, cuts &amp; care in downtown Boise">
       </div>
 
+      <span class="sub-label">Your services (optional)</span>
+      <p class="svc-note">Tap what you offer and add a price if you like — it becomes the menu on your site. Skip it and add later, totally fine.</p>
+      <div class="svc-picker" id="svcPicker"></div>
+      <div class="svc-custom">
+        <input type="text" class="sc-name" id="svcCustomName" maxlength="60" placeholder="Add your own — e.g. Bridal updo">
+        <input type="text" class="sc-price" id="svcCustomPrice" maxlength="20" placeholder="$">
+        <button type="button" class="sc-add" id="svcCustomAdd">Add</button>
+      </div>
+
+      <div class="field-row">
+        <div class="field">
+          <label for="instagram">Instagram (optional)</label>
+          <input type="text" id="instagram" maxlength="40" placeholder="@yoursalon">
+        </div>
+        <div class="field">
+          <label for="hours">Hours (optional)</label>
+          <input type="text" id="hours" maxlength="120" placeholder="e.g. Tue–Sat 9–6">
+        </div>
+      </div>
+
       <div class="wiz-nav">
         <button type="button" class="wiz-back" data-back="1">&larr; Back</button>
         <button type="button" class="btn btn-primary" id="toStep3">Continue</button>
@@ -284,7 +333,7 @@
         <span class="saved-note" id="errSavedNote" style="display:none">Don't worry — your details were saved and we'll reach out to finish your site by hand if needed.</span>
         <div style="margin-top:14px;display:flex;gap:10px;flex-wrap:wrap">
           <button type="button" class="btn btn-primary" id="retryBtn" style="padding:12px 22px">Try again</button>
-          <a class="btn btn-outline" href="mailto:hello@salonvine.com" style="padding:12px 22px">Email us instead</a>
+          <a class="btn btn-outline" href="index.html" style="padding:12px 22px">Back to salonvine.com</a>
         </div>
       </div>
     </section>
@@ -297,6 +346,11 @@
         <p><strong id="successSalon"></strong> is officially on the web — free during early access.</p>
         <a class="live-link" id="liveLink" target="_blank" rel="noopener"></a>
         <p id="photoNote" style="display:none;font-size:.85rem"></p>
+        <ul class="next-steps" id="nextSteps">
+          <li><span class="ns-ico">1</span><span><strong>Share your link</strong> — text it to regulars, pin it on Google.</span><button type="button" class="ns-copy" id="copyLinkBtn">Copy link</button></li>
+          <li><span class="ns-ico">2</span><span><strong>Add it to your Instagram bio</strong> — it's made for the "link in bio" spot.</span></li>
+          <li><span class="ns-ico">3</span><span><strong>Watch your inbox</strong> — booking requests from your site arrive by email.</span></li>
+        </ul>
         <p style="font-size:.9rem">We'll email you when owner login for editing is ready. Until then, just reply to any Salon Vine email to request changes.</p>
         <div class="success-actions">
           <a class="btn btn-primary" id="viewSiteBtn" target="_blank" rel="noopener">View my site</a>
@@ -359,11 +413,17 @@ var state = {
 };
 var MAX_PHOTOS = 6;
 
-/* ---------------- plan preselect via ?plan= ---------------- */
+/* ---------------- plan preselect via ?plan= + salon prefill via ?salon= ---------------- */
 (function () {
-  var p = new URLSearchParams(window.location.search).get('plan');
+  var q = new URLSearchParams(window.location.search);
+  var p = q.get('plan');
   if (p === 'studio' || p === 'pro' || p === 'elite') { state.plan = p; }
   syncPlans();
+  /* v2: the homepage hero passes the typed salon name along */
+  var salonParam = (q.get('salon') || '').trim().slice(0, 80);
+  if (salonParam) {
+    document.getElementById('salonName').value = salonParam;
+  }
 })();
 function syncPlans() {
   document.querySelectorAll('.wplan').forEach(function (b) {
@@ -410,6 +470,13 @@ document.getElementById('toStep4').addEventListener('click', function () { build
 document.getElementById('skipPhotos').addEventListener('click', function () { buildSummary(); showPanel('step4'); });
 
 /* ---------------- theme picker ---------------- */
+/* v2: the mini-previews show the salon's OWN name + tagline live */
+function previewName() {
+  return document.getElementById('salonName').value.trim() || 'Salon Name';
+}
+function previewTagline() {
+  return document.getElementById('tagline').value.trim() || 'Your tagline here';
+}
 function buildThemeGrid() {
   var grid = document.getElementById('themeGrid');
   grid.innerHTML = '';
@@ -423,8 +490,8 @@ function buildThemeGrid() {
     var accent = (key === state.theme) ? state.accent : t.accent;
     b.innerHTML =
       '<div class="theme-mini" style="background:' + t.bg + ';color:' + t.ink + '">' +
-        '<div class="tm-name">Salon Name</div>' +
-        '<div class="tm-tag" style="color:' + t.soft + '">Your tagline here</div>' +
+        '<div class="tm-name">' + esc(previewName()) + '</div>' +
+        '<div class="tm-tag" style="color:' + t.soft + '">' + esc(previewTagline()) + '</div>' +
         '<div class="tm-row">' +
           '<span class="tm-btn" style="background:' + accent + '"></span>' +
           '<span class="tm-sq" style="background:' + t.bg2 + '"></span>' +
@@ -467,6 +534,77 @@ function buildAccentRow() {
 }
 buildThemeGrid();
 buildAccentRow();
+/* v2: keep the mini-previews live as the name/tagline change */
+document.getElementById('salonName').addEventListener('input', buildThemeGrid);
+document.getElementById('tagline').addEventListener('input', buildThemeGrid);
+
+/* ---------------- v2: services quick-picker ---------------- */
+var COMMON_SERVICES = ['Haircut', 'Color', 'Balayage', 'Blowout', 'Beard trim',
+                       'Style', 'Treatment', 'Extensions', 'Updo', 'Kids cut'];
+
+function makeServiceChip(name, opts) {
+  opts = opts || {};
+  var chip = document.createElement('div');
+  chip.className = 'svc-chip' + (opts.on ? ' on' : '');
+  chip.dataset.name = name;
+  if (opts.custom) { chip.dataset.custom = '1'; }
+  var tog = document.createElement('button');
+  tog.type = 'button';
+  tog.className = 'svc-tog';
+  tog.textContent = name;
+  tog.setAttribute('aria-pressed', opts.on ? 'true' : 'false');
+  tog.addEventListener('click', function () {
+    if (chip.dataset.custom) { chip.remove(); return; } /* custom: tap removes */
+    var on = chip.classList.toggle('on');
+    tog.setAttribute('aria-pressed', on ? 'true' : 'false');
+    if (on) { chip.querySelector('input').focus(); }
+  });
+  var priceWrap = document.createElement('span');
+  priceWrap.className = 'svc-price';
+  var price = document.createElement('input');
+  price.type = 'text';
+  price.maxLength = 20;
+  price.placeholder = '$';
+  price.setAttribute('aria-label', name + ' price');
+  if (opts.price) { price.value = opts.price; }
+  priceWrap.appendChild(price);
+  chip.appendChild(tog);
+  chip.appendChild(priceWrap);
+  return chip;
+}
+
+(function buildServicePicker() {
+  var picker = document.getElementById('svcPicker');
+  COMMON_SERVICES.forEach(function (name) {
+    picker.appendChild(makeServiceChip(name));
+  });
+  document.getElementById('svcCustomAdd').addEventListener('click', addCustomService);
+  document.getElementById('svcCustomName').addEventListener('keydown', function (e) {
+    if (e.key === 'Enter') { e.preventDefault(); addCustomService(); }
+  });
+  function addCustomService() {
+    var nameEl = document.getElementById('svcCustomName');
+    var priceEl = document.getElementById('svcCustomPrice');
+    var name = nameEl.value.trim().slice(0, 60);
+    if (!name) { nameEl.focus(); return; }
+    picker.appendChild(makeServiceChip(name, { on: true, custom: true, price: priceEl.value.trim() }));
+    nameEl.value = '';
+    priceEl.value = '';
+    nameEl.focus();
+  }
+})();
+
+/* selected services, straight from the DOM (single source of truth) */
+function getServices() {
+  var out = [];
+  document.querySelectorAll('#svcPicker .svc-chip.on').forEach(function (chip) {
+    var name = String(chip.dataset.name || '').trim();
+    if (!name) { return; }
+    var priceEl = chip.querySelector('input');
+    out.push({ name: name, price: priceEl ? priceEl.value.trim().slice(0, 20) : '' });
+  });
+  return out.slice(0, 30);
+}
 
 /* ---------------- photos ---------------- */
 var photoInput = document.getElementById('photoInput');
@@ -572,12 +710,21 @@ function buildSummary() {
   var slug = slugify(salon);
   var planNames = { studio: 'Studio — $19/mo', pro: 'Studio Pro — $39/mo', elite: 'Studio Elite — $59/mo' };
   var thumbs = state.photos.map(function (p) { return '<img src="' + p.dataUrl + '" alt="">'; }).join('');
+  var services = getServices();
+  var svcText = services.map(function (s) {
+    return esc(s.name) + (s.price ? ' ' + esc(s.price) : '');
+  }).join(' · ');
+  var hours = document.getElementById('hours').value.trim();
+  var instagram = document.getElementById('instagram').value.trim().replace(/^@+/, '');
   var rows = [
     ['Salon', esc(salon)],
     ['Plan', esc(planNames[state.plan] || state.plan) + ' <span style="color:var(--good);font-weight:700;font-size:.75rem">FREE FOR NOW</span>'],
     ['Theme', '<span class="sum-swatch" style="background:' + t.bg + '"></span> ' + esc(t.label)],
     ['Accent', '<span class="sum-dot" style="background:' + state.accent + '"></span>'],
     ['Tagline', tagline ? esc(tagline) : '<span style="color:var(--ink-soft)">—</span>'],
+    ['Services', services.length ? svcText : '<span style="color:var(--ink-soft)">Add later</span>'],
+    ['Hours', hours ? esc(hours) : '<span style="color:var(--ink-soft)">—</span>'],
+    ['Instagram', instagram ? '@' + esc(instagram) : '<span style="color:var(--ink-soft)">—</span>'],
     ['Photos', state.photos.length ? '<span class="sum-thumbs">' + thumbs + '</span>' : '<span style="color:var(--ink-soft)">Add later</span>'],
     ['Your link', '<span class="sum-url">salonvine.com/s/' + esc(slug) + '</span>']
   ];
@@ -616,7 +763,11 @@ function basePayload() {
     theme: state.theme,
     accent: state.accent,
     tagline: document.getElementById('tagline').value.trim(),
-    slug: slugify(document.getElementById('salonName').value.trim())
+    slug: slugify(document.getElementById('salonName').value.trim()),
+    /* v2: optional extras — ride along on signupSite AND the plain-signup fallback */
+    services: getServices(),
+    hours: document.getElementById('hours').value.trim(),
+    instagram: document.getElementById('instagram').value.trim().replace(/^@+/, '')
   };
 }
 
@@ -757,6 +908,28 @@ function showSuccess(site, uploaded) {
   showPanel('panelSuccess');
   confetti();
 }
+
+/* v2: copy-link button on the success checklist */
+document.getElementById('copyLinkBtn').addEventListener('click', function () {
+  var btn = this;
+  var url = (state.siteResult && state.siteResult.url) || document.getElementById('liveLink').href;
+  function flash(ok) {
+    btn.textContent = ok ? 'Copied ✓' : 'Copy failed';
+    setTimeout(function () { btn.textContent = 'Copy link'; }, 2000);
+  }
+  if (navigator.clipboard && navigator.clipboard.writeText) {
+    navigator.clipboard.writeText(url).then(function () { flash(true); }, function () { flash(false); });
+  } else {
+    var ta = document.createElement('textarea');
+    ta.value = url;
+    document.body.appendChild(ta);
+    ta.select();
+    var ok = false;
+    try { ok = document.execCommand('copy'); } catch (e) { ok = false; }
+    ta.remove();
+    flash(ok);
+  }
+});
 
 /* ---------------- tasteful confetti ---------------- */
 function confetti() {
