@@ -46,12 +46,15 @@ async function logToSheet(record) {
 // appends to the "SalonVine — Live Data" sheet that powers the owner portal
 // and emails both owners instantly. Additive alongside the Salon Vine
 // Signups sheet above — never throws, never blocks a signup.
-// The token below is the LIGHT signup-only token (can only insert signups,
-// never read); override via env if it's ever rotated.
+// The token comes from the SV_BACKEND_TOKEN env var — never hardcoded.
 async function logToOwnerBackend(record) {
   const url = process.env.SV_BACKEND_URL ||
     'https://script.google.com/macros/s/AKfycbyXCmFCL-HuLEFvZDTsV9fIrYiaRCW06ZuNl1uYR-4DhgaJpmthlUKaAIr8rtau2_g4/exec';
-  const token = process.env.SV_BACKEND_TOKEN || 'b26b36539afb049eaf3a71401376e806';
+  const token = process.env.SV_BACKEND_TOKEN;
+  if (!token) {
+    console.error('Owner-backend logging skipped: SV_BACKEND_TOKEN not set');
+    return false;
+  }
   try {
     const res = await fetch(url, {
       method: 'POST',

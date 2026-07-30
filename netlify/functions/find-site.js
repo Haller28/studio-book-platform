@@ -16,7 +16,11 @@ const { json } = require('./_lib');
 async function findInstantSite(email) {
   const url = process.env.SV_BACKEND_URL ||
     'https://script.google.com/macros/s/AKfycbyXCmFCL-HuLEFvZDTsV9fIrYiaRCW06ZuNl1uYR-4DhgaJpmthlUKaAIr8rtau2_g4/exec';
-  const token = process.env.SV_BACKEND_TOKEN || 'b26b36539afb049eaf3a71401376e806';
+  const token = process.env.SV_BACKEND_TOKEN;
+  if (!token) {
+    console.error('findInstantSite skipped: SV_BACKEND_TOKEN not set');
+    return null;
+  }
   try {
     const res = await fetch(url, {
       method: 'POST',
