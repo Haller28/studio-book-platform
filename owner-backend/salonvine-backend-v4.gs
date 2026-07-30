@@ -1,5 +1,5 @@
 /* ============================================================
-   SalonVine — Live Data backend v4 (Google Apps Script)
+   SalonVine — Live Data backend v4.1 (Google Apps Script)
 
    v4 adds the mail/SMS relay for the multi-tenant app site
    (salonvine-app.netlify.app), plus plan/status lookups so the
@@ -814,6 +814,24 @@ function notifyOwnersOfSignup_(body, id, when) {
    last 24h (e.g. the visitor hit Retry after a partial failure),
    the existing slug/url is returned instead of a duplicate site.
    ------------------------------------------------------------ */
+
+/* v4.1: after any signupSite, tell the multi-tenant app to provision the
+   owner account + send the portal invite. Never allowed to fail a signup. */
+function provisionOwner_(salon, name, email, phone, slug, url) {
+  try {
+    UrlFetchApp.fetch('https://salonvine-app.netlify.app/.netlify/functions/provision-owner', {
+      method: 'post',
+      contentType: 'application/json',
+      muteHttpExceptions: true,
+      payload: JSON.stringify({
+        token: fullToken_(),
+        salon: salon, name: name, email: email, phone: phone,
+        slug: slug, url: url
+      })
+    });
+  } catch (e) { /* best-effort */ }
+}
+
 function handleSignupSite_(body) {
   var lock = LockService.getScriptLock();
   lock.waitLock(15000);
@@ -835,6 +853,7 @@ function handleSignupSite_(body) {
         var created = new Date(s.createdAt);
         if (!isNaN(created.getTime()) && (now.getTime() - created.getTime()) < DAY) {
           signupCore_(body, now); /* still record/dedupe the lead */
+          provisionOwner_(String(body.salon || ''), String(body.name || ''), email, String(body.phone || ''), String(s.slug), String(s.url || (PUBLIC_SITE_BASE + s.slug)));
           return jsonOut_({ ok: true, id: '', slug: String(s.slug), url: String(s.url || (PUBLIC_SITE_BASE + s.slug)), existing: true });
         }
       }
@@ -872,6 +891,7 @@ function handleSignupSite_(body) {
       createdAt: now.toISOString()
     });
 
+    provisionOwner_(String(body.salon || ''), String(body.name || ''), email, String(body.phone || ''), slug, url);
     return jsonOut_({ ok: true, id: su.id, slug: slug, url: url });
   } finally {
     lock.releaseLock();
