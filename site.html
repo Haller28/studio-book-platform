@@ -270,6 +270,8 @@ footer .powered a:hover{text-decoration:underline}
 var SV_EXEC = window.SV_EXEC_OVERRIDE ||
   'https://script.google.com/macros/s/AKfycbyXCmFCL-HuLEFvZDTsV9fIrYiaRCW06ZuNl1uYR-4DhgaJpmthlUKaAIr8rtau2_g4/exec';
 var SV_LEAD_PROXY = 'https://salonvine-app.netlify.app/.netlify/functions/site-lead-proxy';
+var SV_DEPOSIT = 'https://salonvine-app.netlify.app/.netlify/functions/booking-deposit';
+var SV_DEPOSIT_CONFIRM = 'https://salonvine-app.netlify.app/.netlify/functions/deposit-confirm';
 
 /* ---------------- themes (kept in sync with signup.html) ---------------- */
 var THEMES = {
@@ -592,6 +594,25 @@ document.getElementById('leadForm').addEventListener('submit', function (e) {
       msg.style.display = 'block';
       btn.textContent = 'Request sent ✓';
       document.getElementById('leadForm').reset();
+
+      /* If this salon asks for a deposit, hand off to Stripe. The request is
+         already saved either way — a deposit hiccup must never lose a booking. */
+      if (data.bookingId) {
+        btn.textContent = 'Checking deposit…';
+        fetch(SV_DEPOSIT, {
+          method: 'POST',
+          headers: { 'Content-Type': 'application/json' },
+          body: JSON.stringify({ slug: (SITE && SITE.slug) || currentSlug(), bookingId: data.bookingId })
+        }).then(function (r) { return r.json(); }).then(function (d) {
+          if (d && d.ok && d.depositRequired && d.url) {
+            msg.textContent = 'One more step — hold your spot with a $' +
+              (d.amountCents / 100).toFixed(2) + ' deposit. Taking you to checkout…';
+            window.location.href = d.url;
+          } else {
+            btn.textContent = 'Request sent ✓';
+          }
+        }).catch(function () { btn.textContent = 'Request sent ✓'; });
+      }
     } else {
       throw new Error((data && data.error) || 'Unexpected response');
     }
@@ -604,6 +625,52 @@ document.getElementById('leadForm').addEventListener('submit', function (e) {
     btn.textContent = 'Send request';
   });
 });
+
+/* ---- returning from Stripe Checkout after paying a deposit ----
+   Confirmation is server-verified (we ask Stripe), never trusted from
+   these query params — they are only a hint that we should go look. */
+(function () {
+  var q = new URLSearchParams(location.search);
+  var state = q.get('deposit');
+  if (!state) { return; }
+  var msg = document.getElementById('leadMsg');
+  if (!msg) { return; }
+  function clean() {
+    history.replaceState({}, '', location.pathname);
+  }
+  if (state === 'cancelled') {
+    msg.className = 'err';
+    msg.textContent = 'Deposit not completed, so your spot is not held yet. Your request was still sent — the salon may follow up.';
+    msg.style.display = 'block';
+    clean();
+    return;
+  }
+  if (state !== 'paid') { return; }
+  var bookingId = q.get('b'), cs = q.get('cs');
+  msg.className = 'ok';
+  msg.textContent = 'Confirming your deposit…';
+  msg.style.display = 'block';
+  if (!bookingId || !cs) { clean(); return; }
+  fetch(SV_DEPOSIT_CONFIRM + '?slug=' + encodeURIComponent((SITE && SITE.slug) || currentSlug()) +
+        '&bookingId=' + encodeURIComponent(bookingId) + '&session_id=' + encodeURIComponent(cs))
+    .then(function (r) { return r.json(); })
+    .then(function (d) {
+      if (d && d.ok && d.paid) {
+        msg.className = 'ok';
+        msg.textContent = 'Deposit received — your spot is held. See you soon!';
+      } else {
+        msg.className = 'err';
+        msg.textContent = 'We could not confirm that payment yet. If you were charged, the salon will see it — no need to pay twice.';
+      }
+      msg.style.display = 'block';
+      clean();
+    })
+    .catch(function () {
+      msg.className = 'err';
+      msg.textContent = 'We could not confirm that payment yet. If you were charged, the salon will see it — no need to pay twice.';
+      clean();
+    });
+})();
 </script>
 
 </body>
