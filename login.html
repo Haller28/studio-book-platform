@@ -8,6 +8,16 @@
 <link rel="apple-touch-icon" href="icon-180.png">
 <link href="https://fonts.googleapis.com/css2?family=Playfair+Display:wght@500;600;700&family=Inter:wght@400;500;600;700&display=swap" rel="stylesheet">
 <link rel="stylesheet" href="style.css">
+<style>
+.login-tabs{display:flex;gap:0;border:1px solid var(--line);border-radius:10px;overflow:hidden;margin-bottom:22px}
+.login-tabs button{flex:1;border:none;background:#fff;font-family:var(--sans);font-size:.85rem;font-weight:600;color:var(--ink-soft);padding:13px 10px;cursor:pointer;transition:background .2s,color .2s}
+.login-tabs button.on{background:var(--ink);color:#fff}
+.login-pane{display:none}
+.login-pane.on{display:block}
+.login-msg{display:none;margin-top:16px;padding:14px;border-radius:8px;background:var(--cream2);font-size:.88rem;text-align:center}
+.login-msg.err{background:#fbe8e8;color:#b3462e}
+.login-hint{font-size:.78rem;color:var(--ink-soft);margin-top:5px}
+</style>
 </head>
 <body>
 
@@ -21,18 +31,50 @@
 </header>
 
 <div class="signup-wrap">
-  <h2 style="text-align:center;margin-bottom:8px">Find your salon</h2>
-  <p style="text-align:center;color:var(--ink-soft);margin-bottom:36px">Every Salon Vine salon has its own site. Enter your email and we'll send you straight there.</p>
+  <h2 style="text-align:center;margin-bottom:8px">Log in</h2>
+  <p style="text-align:center;color:var(--ink-soft);margin-bottom:36px">Salon owners and stylists sign in below. Just looking for your salon's site? Use the finder.</p>
 
   <div class="signup-card">
-    <form id="findForm">
-      <div class="field">
-        <label for="lookupEmail">Email</label>
-        <input type="email" id="lookupEmail" placeholder="you@yoursalon.com" required>
-      </div>
-      <button type="submit" class="btn btn-primary" style="width:100%" id="findBtn">Take me to my site</button>
-    </form>
-    <div id="findMsg" style="display:none;margin-top:16px;padding:14px;border-radius:8px;background:var(--cream2);font-size:.88rem;text-align:center"></div>
+    <div class="login-tabs" role="tablist">
+      <button type="button" id="tabStaff" class="on" role="tab" aria-selected="true">Salon staff login</button>
+      <button type="button" id="tabFind" role="tab" aria-selected="false">Find my salon site</button>
+    </div>
+
+    <!-- ============ staff login (owners + stylists) ============ -->
+    <div class="login-pane on" id="paneStaff">
+      <form id="staffForm">
+        <div class="field">
+          <label for="staffSlug">Salon</label>
+          <input type="text" id="staffSlug" placeholder="e.g. the-hair-loft" autocomplete="organization" required>
+          <div class="login-hint">The name in your site link — salonvine.com/s/<strong>the-hair-loft</strong>. Pasting your full site link works too.</div>
+        </div>
+        <div class="field">
+          <label for="staffEmail">Email</label>
+          <input type="email" id="staffEmail" placeholder="you@yoursalon.com" autocomplete="email" required>
+        </div>
+        <div class="field">
+          <label for="staffPassword">Password</label>
+          <input type="password" id="staffPassword" placeholder="Your password" autocomplete="current-password" required>
+        </div>
+        <button type="submit" class="btn btn-primary" style="width:100%" id="staffBtn">Log in</button>
+      </form>
+      <div class="login-msg" id="staffMsg"></div>
+      <p style="text-align:center;font-size:.82rem;color:var(--ink-soft);margin-top:16px">
+        Forgot your password? <a id="forgotLink" href="#" style="text-decoration:underline">Reset it from your salon portal</a>.
+      </p>
+    </div>
+
+    <!-- ============ find-your-site email lookup (instant sites) ============ -->
+    <div class="login-pane" id="paneFind">
+      <form id="findForm">
+        <div class="field">
+          <label for="lookupEmail">Email</label>
+          <input type="email" id="lookupEmail" placeholder="you@yoursalon.com" autocomplete="email" required>
+        </div>
+        <button type="submit" class="btn btn-primary" style="width:100%" id="findBtn">Take me to my site</button>
+      </form>
+      <div class="login-msg" id="findMsg"></div>
+    </div>
   </div>
 </div>
 
@@ -41,23 +83,113 @@
 </footer>
 
 <script>
+'use strict';
 document.getElementById('year').textContent = new Date().getFullYear();
 
-document.getElementById('findForm').addEventListener('submit', async (e)=>{
+var SV_APP = 'https://salonvine-app.netlify.app';
+
+/* ---------------- tabs ---------------- */
+function showPane(which) {
+  var staff = which === 'staff';
+  document.getElementById('tabStaff').classList.toggle('on', staff);
+  document.getElementById('tabFind').classList.toggle('on', !staff);
+  document.getElementById('tabStaff').setAttribute('aria-selected', staff ? 'true' : 'false');
+  document.getElementById('tabFind').setAttribute('aria-selected', staff ? 'false' : 'true');
+  document.getElementById('paneStaff').classList.toggle('on', staff);
+  document.getElementById('paneFind').classList.toggle('on', !staff);
+}
+document.getElementById('tabStaff').addEventListener('click', function () { showPane('staff'); });
+document.getElementById('tabFind').addEventListener('click', function () { showPane('find'); });
+
+/* ---------------- staff login ---------------- */
+/* Accepts a bare slug, "salonvine.com/s/<slug>", or a portal link — anything
+   the owner might paste — and derives the slug from it. */
+function deriveSlug(raw) {
+  var s = String(raw || '').trim().toLowerCase();
+  var m = s.match(/\/(?:s|p)\/([a-z0-9-]+)/);   /* pasted a site or portal URL */
+  if (m) { return m[1]; }
+  s = s.replace(/^https?:\/\//, '').replace(/^www\./, '');
+  s = s.split(/[\/?#]/)[0];                      /* drop any path bits */
+  s = s.replace(/\.[a-z]+$/, '');                /* drop a pasted ".com" etc. */
+  return s.replace(/&/g, ' and ')
+    .replace(/[^a-z0-9]+/g, '-')
+    .replace(/^-+|-+$/g, '')
+    .slice(0, 60);
+}
+
+/* keep the forgot-password link pointed at the right portal as they type */
+var slugInput = document.getElementById('staffSlug');
+function syncForgotLink() {
+  var slug = deriveSlug(slugInput.value);
+  document.getElementById('forgotLink').href =
+    slug ? SV_APP + '/p/' + encodeURIComponent(slug) : SV_APP;
+}
+slugInput.addEventListener('input', syncForgotLink);
+syncForgotLink();
+
+document.getElementById('staffForm').addEventListener('submit', function (e) {
+  e.preventDefault();
+  var btn = document.getElementById('staffBtn');
+  var msg = document.getElementById('staffMsg');
+  var slug = deriveSlug(slugInput.value);
+  var email = document.getElementById('staffEmail').value.trim();
+  var password = document.getElementById('staffPassword').value;
+  msg.style.display = 'none';
+  msg.className = 'login-msg';
+
+  if (!slug) {
+    msg.classList.add('err');
+    msg.textContent = 'Please enter your salon name or site link.';
+    msg.style.display = 'block';
+    return;
+  }
+
+  btn.disabled = true;
+  btn.textContent = 'Logging in…';
+
+  fetch(SV_APP + '/.netlify/functions/login', {
+    method: 'POST',
+    credentials: 'include',
+    headers: { 'Content-Type': 'application/json' },
+    body: JSON.stringify({ slug: slug, email: email, password: password })
+  }).then(function (res) {
+    return res.json().catch(function () { return {}; }).then(function (data) {
+      if (res.ok && data && data.ok) {
+        btn.textContent = 'Welcome back ✓';
+        window.location.href = SV_APP + '/p/' + encodeURIComponent(data.slug || slug);
+        return;
+      }
+      throw new Error((data && data.error) ||
+        (res.status === 401 ? 'That email or password doesn’t match. Double-check and try again.'
+                            : 'Login failed (HTTP ' + res.status + ').'));
+    });
+  }).catch(function (err) {
+    msg.classList.add('err');
+    msg.textContent = err && err.message ? err.message : 'Something went wrong — please try again.';
+    msg.style.display = 'block';
+    btn.disabled = false;
+    btn.textContent = 'Log in';
+  });
+});
+
+/* ---------------- find-your-site lookup (unchanged behavior) ---------------- */
+document.getElementById('findForm').addEventListener('submit', async (e) => {
   e.preventDefault();
   const btn = document.getElementById('findBtn');
   const msg = document.getElementById('findMsg');
   btn.disabled = true;
   btn.textContent = 'Looking...';
   msg.style.display = 'none';
+  msg.className = 'login-msg';
 
   try {
-    const res = await fetch('/.netlify/functions/find-site', {
+    const res = await fetch('https://salonvine-app.netlify.app/.netlify/functions/find-site-proxy', {
       method: 'POST',
       headers: { 'Content-Type': 'application/json' },
       body: JSON.stringify({ email: document.getElementById('lookupEmail').value.trim() })
     });
-    const data = await res.json();
+    const raw = await res.json();
+    const data = raw && raw.found ? { siteUrl: raw.url, salonName: raw.salonName } : raw;
     if (res.ok && data.siteUrl) {
       // Instant sites (salonvine.com/s/<slug>) are single-page — go straight
       // there. Standalone client sites keep their /portal.html staff portal.

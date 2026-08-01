@@ -347,13 +347,15 @@
         <a class="live-link" id="liveLink" target="_blank" rel="noopener"></a>
         <p id="photoNote" style="display:none;font-size:.85rem"></p>
         <ul class="next-steps" id="nextSteps">
-          <li><span class="ns-ico">1</span><span><strong>Share your link</strong> — text it to regulars, pin it on Google.</span><button type="button" class="ns-copy" id="copyLinkBtn">Copy link</button></li>
-          <li><span class="ns-ico">2</span><span><strong>Add it to your Instagram bio</strong> — it's made for the "link in bio" spot.</span></li>
-          <li><span class="ns-ico">3</span><span><strong>Watch your inbox</strong> — booking requests from your site arrive by email.</span></li>
+          <li><span class="ns-ico">1</span><span><strong>Check your email</strong> — your owner login invite is on its way. Set your password and you're in.</span></li>
+          <li><span class="ns-ico">2</span><span><strong>Share your link</strong> — text it to regulars, pin it on Google.</span><button type="button" class="ns-copy" id="copyLinkBtn">Copy link</button></li>
+          <li><span class="ns-ico">3</span><span><strong>Add it to your Instagram bio</strong> — it's made for the "link in bio" spot.</span></li>
+          <li><span class="ns-ico">4</span><span><strong>Watch your inbox</strong> — booking requests from your site arrive by email.</span></li>
         </ul>
-        <p style="font-size:.9rem">We'll email you when owner login for editing is ready. Until then, just reply to any Salon Vine email to request changes.</p>
+        <p style="font-size:.9rem">Check your email — your owner login invite is on its way. Once you've set a password, manage bookings and your team any time at <a id="portalLink" href="#" style="text-decoration:underline">your salon portal</a>.</p>
         <div class="success-actions">
           <a class="btn btn-primary" id="viewSiteBtn" target="_blank" rel="noopener">View my site</a>
+          <a class="btn btn-accent" id="portalBtn" target="_blank" rel="noopener">Open my portal</a>
           <a class="btn btn-outline" href="index.html">Back to salonvine.com</a>
         </div>
       </div>
@@ -378,9 +380,10 @@
 document.getElementById('year').textContent = new Date().getFullYear();
 
 /* ---------------- config ---------------- */
-var SV_EXEC = window.SV_EXEC_OVERRIDE ||
-  'https://script.google.com/macros/s/AKfycbyXCmFCL-HuLEFvZDTsV9fIrYiaRCW06ZuNl1uYR-4DhgaJpmthlUKaAIr8rtau2_g4/exec';
-var SV_SIGNUP_TOKEN = 'b26b36539afb049eaf3a71401376e806'; /* light public token only */
+/* All signup writes go through the Salon Vine app's serverless proxies —
+   the app adds the backend token server-side, so no secrets live here. */
+var SV_APP = 'https://salonvine-app.netlify.app';
+var SV_FN = SV_APP + '/.netlify/functions/';
 var SITE_BASE = 'https://salonvine.com/s/';
 
 /* ---------------- themes / accents (shared with site.html) ---------------- */
@@ -739,21 +742,22 @@ function esc(s) {
 }
 
 /* ---------------- backend calls ---------------- */
-function postJson(payload) {
-  /* text/plain => "simple request" => no CORS preflight (Apps Script) */
-  return fetch(SV_EXEC, {
+function postFn(fn, payload) {
+  /* JSON POST to a salonvine-app serverless function (CORS-enabled) */
+  return fetch(SV_FN + fn, {
     method: 'POST',
-    headers: { 'Content-Type': 'text/plain;charset=utf-8' },
+    headers: { 'Content-Type': 'application/json' },
     body: JSON.stringify(payload)
   }).then(function (res) {
-    if (!res.ok) { throw new Error('HTTP ' + res.status); }
-    return res.json();
+    return res.json().catch(function () { return {}; }).then(function (data) {
+      if (!res.ok) { throw new Error((data && data.error) || ('HTTP ' + res.status)); }
+      return data;
+    });
   });
 }
 
 function basePayload() {
   return {
-    token: SV_SIGNUP_TOKEN,
     salon: document.getElementById('salonName').value.trim(),
     name: document.getElementById('ownerName').value.trim(),
     email: document.getElementById('email').value.trim(),
@@ -814,7 +818,7 @@ function submitAll() {
 
   var sitePromise = state.siteResult
     ? Promise.resolve(state.siteResult) /* retry after photos-only failure */
-    : postJson(Object.assign({ type: 'signupSite' }, payload)).then(function (data) {
+    : postFn('signup-proxy', payload).then(function (data) {
         if (!data || !data.ok || !data.slug) {
           throw new Error((data && data.error) || 'Unexpected response from server');
         }
@@ -844,11 +848,19 @@ function submitAll() {
   }).catch(function (err) {
     setProg(0, 'fail');
     setProg(1, 'fail');
-    /* FALLBACK: never lose the lead — record a plain signup */
+    /* FALLBACK: never lose the lead — record a plain signup via our own
+       serverless function (which logs to the sheet + owner backend server-side) */
     var fallback = state.leadSaved
       ? Promise.resolve(true)
-      : postJson(Object.assign({ type: 'signup' }, payload))
-          .then(function (d) { return !!(d && d.ok); })
+      : fetch('/.netlify/functions/create-checkout-session', {
+          method: 'POST',
+          headers: { 'Content-Type': 'application/json' },
+          body: JSON.stringify({
+            plan: payload.plan, salonName: payload.salon, ownerName: payload.name,
+            email: payload.email, phone: payload.phone, oldSiteUrl: payload.website
+          })
+        })
+          .then(function (res) { return res.ok; })
           .catch(function () { return false; });
     fallback.then(function (saved) {
       if (saved) { state.leadSaved = true; }
@@ -871,7 +883,7 @@ function uploadPhotos(slug) {
     chain = chain.then(function () {
       if (p.status === 'done') { done++; return; } /* already uploaded on a prior try */
       p.status = 'uploading';
-      return postJson({ type: 'sitePhoto', token: SV_SIGNUP_TOKEN, slug: slug, n: i + 1, data: p.dataUrl })
+      return postFn('site-photo-proxy', { slug: slug, n: i + 1, data: p.dataUrl })
         .then(function (d) {
           if (d && d.ok) { p.status = 'done'; done++; }
           else { p.status = 'failed'; failed++; }
@@ -897,6 +909,9 @@ function showSuccess(site, uploaded) {
   link.textContent = site.url.replace(/^https?:\/\//, '');
   link.href = site.url;
   document.getElementById('viewSiteBtn').href = site.url;
+  var portalUrl = SV_APP + '/p/' + encodeURIComponent(site.slug);
+  document.getElementById('portalLink').href = portalUrl;
+  document.getElementById('portalBtn').href = portalUrl;
   var note = document.getElementById('photoNote');
   var failedCount = state.photos.filter(function (p) { return p.status === 'failed'; }).length;
   if (failedCount) {

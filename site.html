@@ -264,9 +264,12 @@ footer .powered a:hover{text-decoration:underline}
 'use strict';
 
 /* ---------------- config ---------------- */
+/* Public config reads (?site=slug) stay direct to the backend — no token
+   needed. All writes (booking requests) go through the Salon Vine app's
+   serverless proxy, which adds the token server-side. */
 var SV_EXEC = window.SV_EXEC_OVERRIDE ||
   'https://script.google.com/macros/s/AKfycbyXCmFCL-HuLEFvZDTsV9fIrYiaRCW06ZuNl1uYR-4DhgaJpmthlUKaAIr8rtau2_g4/exec';
-var SV_SIGNUP_TOKEN = 'b26b36539afb049eaf3a71401376e806'; /* light public token only */
+var SV_LEAD_PROXY = 'https://salonvine-app.netlify.app/.netlify/functions/site-lead-proxy';
 
 /* ---------------- themes (kept in sync with signup.html) ---------------- */
 var THEMES = {
@@ -568,13 +571,11 @@ document.getElementById('leadForm').addEventListener('submit', function (e) {
   msg.style.display = 'none';
   msg.className = '';
 
-  /* text/plain => no CORS preflight (Apps Script pattern) */
-  fetch(SV_EXEC, {
+  /* booking request goes through the salonvine-app proxy (token added server-side) */
+  fetch(SV_LEAD_PROXY, {
     method: 'POST',
-    headers: { 'Content-Type': 'text/plain;charset=utf-8' },
+    headers: { 'Content-Type': 'application/json' },
     body: JSON.stringify({
-      type: 'siteLead',
-      token: SV_SIGNUP_TOKEN,
       slug: (SITE && SITE.slug) || currentSlug(),
       name: name,
       phone: phone,
